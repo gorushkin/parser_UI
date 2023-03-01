@@ -1,0 +1,28 @@
+.wrapper {
+  .button {
+    border-radius: 5px;
+    border: 1px solid blue;
+    padding: 10px;
+    font-size: 14px;
+
+    &Active, &:hover {
+      background: blue;
+      color: white;
+    }
+  }
+}
+
+.controls {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 5px;
+}
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  gap: 5px;
+}

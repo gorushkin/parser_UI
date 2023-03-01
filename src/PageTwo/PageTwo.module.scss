@@ -1,0 +1,26 @@
+.wrapper {
+  height: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th,
+  td {
+    border: 1px solid black;
+    font-size: 14px;
+    padding: 0 5px;
+
+    &:hover {
+      cursor: pointer;
+      background: rgb(221, 218, 218);
+      transition: all 0.1s;
+    }
+  }
+}
+
+.menuWrapper {
+  margin-bottom: 2rem;
+}
