@@ -1,4 +1,6 @@
+import { TableMode } from '../PageTwo/PageTwo';
 import { Item, Row } from '../parser';
+import { cn } from '../utils';
 import style from './Menu.module.scss';
 
 const MenuButton = ({
@@ -10,7 +12,9 @@ const MenuButton = ({
   isActive: boolean;
   item: Item;
 }) => {
-  const buttonClassName = isActive ? `${style.button} ${style.buttonActive}` : style.button;
+  const buttonClassName = isActive
+    ? cn(style.button, style.buttonHeader, style.buttonHeaderActive)
+    : cn(style.button, style.buttonHeader);
 
   return (
     <button onClick={() => onClick(item.key)} className={buttonClassName}>
@@ -25,12 +29,16 @@ export const Menu = ({
   handleButtonClick,
   handleMenuReset,
   handleShowAllMenuCLick,
+  mode,
+  onClick,
 }: {
   headers: Row;
   activeList: string[];
   handleButtonClick: (key: string) => void;
   handleMenuReset: () => void;
   handleShowAllMenuCLick: () => void;
+  mode: TableMode;
+  onClick: (mode: TableMode) => void;
 }) => {
   return (
     <div className={style.wrapper}>
@@ -51,6 +59,24 @@ export const Menu = ({
             isActive={activeList.includes(item.displayValue)}
           />
         ))}
+      </div>
+      <div className={style.controls}>
+        <button
+          onClick={() => onClick('whole')}
+          className={cn(style.button, style.buttonMode, mode === 'whole' && style.buttonModeActive)}
+        >
+          Whole
+        </button>
+        <button
+          onClick={() => onClick('groups')}
+          className={cn(
+            style.button,
+            style.buttonMode,
+            mode === 'groups' && style.buttonModeActive
+          )}
+        >
+          Grouped
+        </button>
       </div>
     </div>
   );

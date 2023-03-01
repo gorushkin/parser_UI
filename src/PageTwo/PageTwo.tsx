@@ -5,6 +5,8 @@ import style from './PageTwo.module.scss';
 import { Menu } from '../Menu';
 import { Table } from '../Table';
 
+export type TableMode = 'groups' | 'whole';
+
 const columns = ['TRANSACTION DATE', 'TRANSACTION NAME', 'AMOUNT', 'BALANCE', 'NARRATIVE'];
 
 const parser = new Parser();
@@ -12,6 +14,11 @@ const parser = new Parser();
 export const PageTwo = () => {
   const [activeList, setActiveList] = useState(columns);
   const { fileInfo } = useExportContext();
+  const [tableMode, setTableMode] = useState<TableMode>('whole');
+
+  const handleModeButtonClick = (mode: TableMode) => {
+    setTableMode(mode)
+  };
 
   const parsedData = parser.parse(fileInfo.content);
 
@@ -48,9 +55,11 @@ export const PageTwo = () => {
           handleButtonClick={handleButtonClick}
           headers={headers}
           activeList={activeList}
+          mode={tableMode}
+          onClick={handleModeButtonClick}
         />
       </div>
-      <Table headers={filteredHeaders} operations={filteredOperations} />
+      <Table mode={tableMode} headers={filteredHeaders} operations={filteredOperations} />
     </div>
   );
 };

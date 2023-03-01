@@ -1,13 +1,26 @@
 .wrapper {
   .button {
     border-radius: 5px;
-    border: 1px solid blue;
     padding: 10px;
     font-size: 14px;
 
-    &Active, &:hover {
-      background: blue;
-      color: white;
+    &Header {
+      border: 1px solid blue;
+
+      &Active,
+      &:hover {
+        background: blue;
+        color: white;
+      }
+    }
+
+    &Mode {
+      border: 1px solid rgb(123, 238, 15);
+
+      &Active,
+      &:hover {
+        background: rgb(123, 238, 15);
+      }
     }
   }
 }
@@ -25,4 +38,5 @@
   padding: 0;
   list-style: none;
   gap: 5px;
+  margin-bottom: 1rem;
 }
