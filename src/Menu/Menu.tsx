@@ -1,4 +1,4 @@
-import { Row } from '../parser';
+import { Item, Row } from '../parser';
 import style from './Menu.module.scss';
 
 const MenuButton = ({
@@ -8,16 +8,13 @@ const MenuButton = ({
 }: {
   onClick: (key: string) => void;
   isActive: boolean;
-  item: {
-    key: string;
-    value: string;
-  };
+  item: Item;
 }) => {
   const buttonClassName = isActive ? `${style.button} ${style.buttonActive}` : style.button;
 
   return (
     <button onClick={() => onClick(item.key)} className={buttonClassName}>
-      {item.value}
+      {item.displayValue}
     </button>
   );
 };
@@ -51,7 +48,7 @@ export const Menu = ({
             onClick={handleButtonClick}
             key={item.key}
             item={item}
-            isActive={activeList.includes(item.value)}
+            isActive={activeList.includes(item.displayValue)}
           />
         ))}
       </div>

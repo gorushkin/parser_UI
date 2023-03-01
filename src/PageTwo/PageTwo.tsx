@@ -12,7 +12,7 @@ const TableHeader = ({ headers }: { headers: Row }) => (
       {headers
         .filter((item) => item.isVisible)
         .map((item) => (
-          <th key={item.key}>{item.value}</th>
+          <th key={item.key}>{item.displayValue}</th>
         ))}
     </tr>
   </thead>
@@ -52,7 +52,7 @@ export const PageTwo = () => {
 
   const filteredHeaders = headers.map((item) => ({
     ...item,
-    isVisible: activeList.includes(item.value),
+    isVisible: activeList.includes(item.displayValue),
   }));
 
   const filteredOperations = operations.map((row) =>

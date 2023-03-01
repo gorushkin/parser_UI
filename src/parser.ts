@@ -1,12 +1,14 @@
 type Value = string | Date | number;
 
-export type Row = {
+export type Item = {
   key: string;
   value: Value;
   copyValue: string;
   displayValue: string;
   isVisible: boolean;
-}[];
+};
+
+export type Row = Item[];
 
 export type Rows = Row[];
 
