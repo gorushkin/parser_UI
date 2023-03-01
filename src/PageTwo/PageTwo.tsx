@@ -1,42 +1,11 @@
 import { useState } from 'react';
 import { useExportContext } from '../AppContext/AppContext';
-import { Row, Rows, Parser } from '../parser';
+import { Parser } from '../parser';
 import style from './PageTwo.module.scss';
 import { Menu } from '../Menu';
+import { Table } from '../Table';
 
 const columns = ['TRANSACTION DATE', 'TRANSACTION NAME', 'AMOUNT', 'BALANCE', 'NARRATIVE'];
-
-const TableHeader = ({ headers }: { headers: Row }) => (
-  <thead>
-    <tr>
-      {headers
-        .filter((item) => item.isVisible)
-        .map((item) => (
-          <th key={item.key}>{item.displayValue}</th>
-        ))}
-    </tr>
-  </thead>
-);
-
-const TableBody = ({ operations }: { operations: Rows }) => {
-  return (
-    <tbody>
-      {operations.map((row, rowIndex) => (
-        <tr key={rowIndex}>
-          {row
-            .filter((item) => item.isVisible)
-            .map((item, itemIndex) => {
-              return (
-                <td onClick={() => navigator.clipboard.writeText(item.copyValue)} key={itemIndex}>
-                  {item.displayValue}
-                </td>
-              );
-            })}
-        </tr>
-      ))}
-    </tbody>
-  );
-};
 
 const parser = new Parser();
 
@@ -81,10 +50,7 @@ export const PageTwo = () => {
           activeList={activeList}
         />
       </div>
-      <table className={style.table}>
-        <TableHeader headers={filteredHeaders} />
-        <TableBody operations={filteredOperations} />
-      </table>
+      <Table headers={filteredHeaders} operations={filteredOperations} />
     </div>
   );
 };
