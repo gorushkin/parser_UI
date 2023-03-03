@@ -1,5 +1,4 @@
-import { TableMode } from '../PageTwo/PageTwo';
-import { Item, Row } from '../parser';
+import { Column, Property, TableMode } from '../types';
 import { cn } from '../utils';
 import style from './Menu.module.scss';
 
@@ -8,23 +7,23 @@ const MenuButton = ({
   isActive,
   onClick,
 }: {
-  onClick: (key: string) => void;
+  onClick: (key: Property) => void;
   isActive: boolean;
-  item: Item;
+  item: Column;
 }) => {
   const buttonClassName = isActive
     ? cn(style.button, style.buttonHeader, style.buttonHeaderActive)
     : cn(style.button, style.buttonHeader);
 
   return (
-    <button onClick={() => onClick(item.key)} className={buttonClassName}>
-      {item.displayValue}
+    <button onClick={() => onClick(item as Property)} className={buttonClassName}>
+      {item}
     </button>
   );
 };
 
 export const Menu = ({
-  headers,
+  columns,
   activeList,
   handleButtonClick,
   handleMenuReset,
@@ -32,14 +31,16 @@ export const Menu = ({
   mode,
   onClick,
 }: {
-  headers: Row;
+  columns: Column[];
   activeList: string[];
-  handleButtonClick: (key: string) => void;
+  handleButtonClick: (key: Property) => void;
   handleMenuReset: () => void;
   handleShowAllMenuCLick: () => void;
   mode: TableMode;
   onClick: (mode: TableMode) => void;
 }) => {
+  console.log('headers: ', columns);
+
   return (
     <div className={style.wrapper}>
       <div className={style.controls}>
@@ -51,12 +52,12 @@ export const Menu = ({
         </button>
       </div>
       <div className={style.menu}>
-        {headers.map((item) => (
+        {columns.map((item) => (
           <MenuButton
             onClick={handleButtonClick}
-            key={item.key}
+            key={item}
             item={item}
-            isActive={activeList.includes(item.displayValue)}
+            isActive={activeList.includes(item)}
           />
         ))}
       </div>

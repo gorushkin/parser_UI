@@ -1,61 +1,7 @@
-type Value = string | Date | number;
+import { ColumnsTypes, payeeColumn } from './constants';
+import { Item, PropertyType, Property, Value, Row, Column } from './types';
 
-export type Item = {
-  key: string;
-  value: Value;
-  copyValue: string;
-  displayValue: string;
-  isVisible: boolean;
-};
-
-export type Row = Item[];
-
-export type Rows = Row[];
-
-type PropertyType = 'number' | 'date' | 'string';
-
-type Property =
-  | 'ACCOUNT NUMBER'
-  | 'RECEIPT NUMBER'
-  | 'TRANSACTION DATE'
-  | 'PROCESS DATE'
-  | 'CARD NUMBER'
-  | 'TRANSACTION  NAME'
-  | 'AMOUNT'
-  | 'BALANCE'
-  | 'CHANNEL'
-  | 'REFERANCE'
-  | 'FUNDS TRANSFER'
-  | 'REFNO'
-  | 'TRANSACTION ID'
-  | 'IDENTIFICATION NUMBER'
-  | 'TAX NUMBER'
-  | 'D/C'
-  | 'NARRATIVE'
-  | 'APPLIED FX RATE'
-  | 'TRY EQUIVALENT';
-
-const ColumnsTypes: Record<Property, PropertyType> = {
-  'ACCOUNT NUMBER': 'number',
-  'RECEIPT NUMBER': 'number',
-  'TRANSACTION DATE': 'date',
-  'PROCESS DATE': 'date',
-  'CARD NUMBER': 'number',
-  'TRANSACTION  NAME': 'string',
-  AMOUNT: 'number',
-  BALANCE: 'number',
-  CHANNEL: 'string',
-  REFERANCE: 'string',
-  'FUNDS TRANSFER': 'string',
-  REFNO: 'number',
-  'TRANSACTION ID': 'number',
-  'IDENTIFICATION NUMBER': 'number',
-  'TAX NUMBER': 'number',
-  'D/C': 'string',
-  NARRATIVE: 'string',
-  'APPLIED FX RATE': 'number',
-  'TRY EQUIVALENT': 'number',
-};
+export interface ExtendItem extends Item {}
 
 class Parser {
   data: string[] | null;
@@ -68,14 +14,8 @@ class Parser {
     return line.split('\t').map((item) => item.trim());
   }
 
-  getHeaders(line: string): Row {
-    return this.parseLine(line).map((item, i) => ({
-      key: item.trim(),
-      value: item.trim(),
-      isVisible: true,
-      copyValue: item.trim(),
-      displayValue: item.trim(),
-    }));
+  getHeaders(line: string): Column[] {
+    return this.parseLine(line).map((item) => item.trim());
   }
 
   private parseDate(value: string) {
@@ -112,24 +52,47 @@ class Parser {
     return mapping[type](value);
   }
 
-  private getOperations(lines: string[], headers: Row): Rows {
-    return lines
-      .filter((item) => !!item)
-      .map((row) =>
-        this.parseLine(row).map((item, i) => {
-          const type = ColumnsTypes[headers[i].key as Property];
+  private getOperations(lines: string[], headers: Column[]): Row[] {
+    const filteredLines = lines.filter((item) => !!item);
+    const convertedLines = filteredLines.map((row) => {
+      const parsedRows = this.parseLine(row);
 
-          const { copyValue, value, displayValue } = this.convertValue(item, type);
+      const convertedRows = parsedRows.reduce((acc: Row, item, i) => {
+        const property = headers[i] as Property;
+        const type = ColumnsTypes[property];
 
-          return {
-            key: headers[i].key,
-            copyValue,
-            value,
-            displayValue,
+        const { copyValue, value, displayValue } = this.convertValue(item, type);
+
+        const currentItem: Item = {
+          key: headers[i] as Property,
+          copyValue,
+          value,
+          displayValue,
+          isVisible: true,
+        };
+
+        if (property === 'NARRATIVE') {
+          const splittedValue = displayValue.split('    ');
+          const payee = displayValue.includes('Referans') ? splittedValue[1].slice(1) : '';
+
+          const payeeItem: Item = {
+            key: 'PAYEE',
+            copyValue: payee,
+            value: payee,
+            displayValue: payee,
             isVisible: true,
           };
-        })
-      );
+
+          return [...acc, currentItem, payeeItem];
+        }
+
+        return [...acc, currentItem];
+      }, []);
+
+      return convertedRows;
+    });
+
+    return convertedLines;
   }
 
   parse(data: string | null) {
@@ -144,9 +107,10 @@ class Parser {
     const rawOperations = this.data.slice(1);
 
     const headers = this.getHeaders(rawHeaders);
-    const operations = this.getOperations(rawOperations, headers);
+    const headersWithExtraColumns = [...headers, payeeColumn];
+    const operations = this.getOperations(rawOperations, headersWithExtraColumns);
 
-    return { headers, operations };
+    return { headers: headersWithExtraColumns, operations };
   }
 }
 

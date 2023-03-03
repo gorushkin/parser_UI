@@ -4,31 +4,38 @@ import { Parser } from '../parser';
 import style from './PageTwo.module.scss';
 import { Menu } from '../Menu';
 import { Table } from '../Table';
+import { Header, Property, TableMode } from '../types';
+import { columns } from '../constants';
 
-export type TableMode = 'groups' | 'whole';
-
-const columns = ['TRANSACTION DATE', 'TRANSACTION NAME', 'AMOUNT', 'BALANCE', 'NARRATIVE'];
+const visibleColumns: Property[] = [
+  'TRANSACTION DATE',
+  'TRANSACTION  NAME',
+  'AMOUNT',
+  'BALANCE',
+  'NARRATIVE',
+  'PAYEE',
+];
 
 const parser = new Parser();
 
 export const PageTwo = () => {
-  const [activeList, setActiveList] = useState(columns);
+  const [activeList, setActiveList] = useState(visibleColumns);
   const { fileInfo } = useExportContext();
   const [tableMode, setTableMode] = useState<TableMode>('whole');
 
   const handleModeButtonClick = (mode: TableMode) => {
-    setTableMode(mode)
+    setTableMode(mode);
   };
 
   const parsedData = parser.parse(fileInfo.content);
 
   if (!parsedData) return null;
 
-  const { headers, operations } = parsedData;
+  const { operations } = parsedData;
 
-  const filteredHeaders = headers.map((item) => ({
-    ...item,
-    isVisible: activeList.includes(item.displayValue),
+  const filteredHeaders: Header[] = columns.map((item) => ({
+    key: item,
+    isVisible: activeList.includes(item),
   }));
 
   const filteredOperations = operations.map((row) =>
@@ -38,22 +45,22 @@ export const PageTwo = () => {
     }))
   );
 
-  const handleButtonClick = (key: string): void => {
+  const handleButtonClick = (key: Property): void => {
     setActiveList((state) =>
       activeList.includes(key) ? state.filter((item) => item !== key) : [...state, key]
     );
   };
 
-  const handleShowAllMenuCLick = () => setActiveList(headers.map((item) => item.key));
+  const handleShowAllMenuCLick = () => setActiveList(columns);
 
   return (
     <div className={style.wrapper}>
       <div className={style.menuWrapper}>
         <Menu
           handleShowAllMenuCLick={handleShowAllMenuCLick}
-          handleMenuReset={() => setActiveList(columns)}
+          handleMenuReset={() => setActiveList(visibleColumns)}
           handleButtonClick={handleButtonClick}
-          headers={headers}
+          columns={columns}
           activeList={activeList}
           mode={tableMode}
           onClick={handleModeButtonClick}
