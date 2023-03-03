@@ -1,21 +1,19 @@
-import React from 'react';
-import { TableMode } from '../PageTwo/PageTwo';
-import { Row, Rows } from '../parser';
+import { Row, Header, TableMode } from '../types';
 import style from './Table.module.scss';
 
-const TableHeader = ({ headers }: { headers: Row }) => (
+const TableHeader = ({ headers }: { headers: Header[] }) => (
   <thead>
     <tr>
       {headers
         .filter((item) => item.isVisible)
         .map((item) => (
-          <th key={item.key}>{item.displayValue}</th>
+          <th key={item.key}>{item.key}</th>
         ))}
     </tr>
   </thead>
 );
 
-const GroupedBody = ({ operations }: { operations: Rows }) => {
+const GroupedBody = ({ operations }: { operations: Row[] }) => {
   return (
     <tbody>
       {operations.map((row, rowIndex) => (
@@ -35,7 +33,7 @@ const GroupedBody = ({ operations }: { operations: Rows }) => {
   );
 };
 
-const WholeBody = ({ operations }: { operations: Rows }) => {
+const WholeBody = ({ operations }: { operations: Row[] }) => {
   return (
     <tbody>
       {operations.map((row, rowIndex) => (
@@ -55,7 +53,7 @@ const WholeBody = ({ operations }: { operations: Rows }) => {
   );
 };
 
-const mappingTableBody: Record<TableMode, ({ operations }: { operations: Rows }) => JSX.Element> = {
+const mappingTableBody: Record<TableMode, ({ operations }: { operations: Row[] }) => JSX.Element> = {
   whole: WholeBody,
   groups: GroupedBody,
 };
@@ -65,8 +63,8 @@ export const Table = ({
   operations,
   mode,
 }: {
-  headers: Row;
-  operations: Rows;
+  headers: Header[];
+  operations: Row[];
   mode: TableMode;
 }) => {
   const Body = mappingTableBody[mode];
@@ -74,7 +72,7 @@ export const Table = ({
   return (
     <table className={style.table}>
       <TableHeader headers={headers} />
-      <Body operations={operations}/>
+      <Body operations={operations} />
     </table>
   );
 };
