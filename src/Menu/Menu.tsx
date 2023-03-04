@@ -39,8 +39,6 @@ export const Menu = ({
   mode: TableMode;
   onClick: (mode: TableMode) => void;
 }) => {
-  console.log('headers: ', columns);
-
   return (
     <div className={style.wrapper}>
       <div className={style.controls}>

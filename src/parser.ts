@@ -1,8 +1,6 @@
 import { ColumnsTypes, payeeColumn } from './constants';
 import { Item, PropertyType, Property, Value, Row, Column } from './types';
 
-export interface ExtendItem extends Item {}
-
 class Parser {
   data: string[] | null;
 
@@ -55,9 +53,9 @@ class Parser {
   private getOperations(lines: string[], headers: Column[]): Row[] {
     const filteredLines = lines.filter((item) => !!item);
     const convertedLines = filteredLines.map((row) => {
-      const parsedRows = this.parseLine(row);
+      const parsedRow = this.parseLine(row);
 
-      const convertedRows = parsedRows.reduce((acc: Row, item, i) => {
+      const convertedRow = parsedRow.reduce((acc: Row, item, i) => {
         const property = headers[i] as Property;
         const type = ColumnsTypes[property];
 
@@ -89,7 +87,8 @@ class Parser {
         return [...acc, currentItem];
       }, []);
 
-      return convertedRows;
+      console.log('convertedRows: ', convertedRow);
+      return convertedRow;
     });
 
     return convertedLines;
