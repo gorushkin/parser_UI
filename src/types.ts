@@ -1,3 +1,5 @@
+import { Transaction } from './parser';
+
 export type TableMode = 'groups' | 'whole';
 
 export type Column =
@@ -8,3 +10,5 @@ export type Column =
   | 'amount'
   | 'balance'
   | 'memo';
+
+export type TransactionGroup = Record<string, Transaction[]>;

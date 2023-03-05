@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useExportContext } from '../AppContext/AppContext';
-import { Parser } from '../parser';
+import { Parser, Transaction } from '../parser';
 import style from './PageTwo.module.scss';
 import { Menu } from '../Menu';
 import { Table } from '../Table';
-import { TableMode } from '../types';
+import { TransactionGroup, TableMode } from '../types';
+// type Group = { date: string; data: Transaction[] };
 
 // const visibleColumns: Property[] = [
 //   'TRANSACTION DATE',
@@ -27,9 +28,14 @@ export const PageTwo = () => {
   };
 
   const transactions = parser.parse(fileInfo.content);
-  console.log('transactions: ', transactions);
 
   if (!transactions) return null;
+
+  const groupedTransactions = transactions.reduce((groups: TransactionGroup, item) => {
+    const date = item.processDate.displayValue;
+    return { ...groups, [date]: [...(groups[date] || []), item] };
+  }, {} as TransactionGroup);
+
 
   // const filteredHeaders: Header[] = columns.map((item) => ({
   //   key: item,
@@ -64,7 +70,7 @@ export const PageTwo = () => {
           onClick={handleModeButtonClick}
         />
       </div> */}
-      <Table mode={tableMode}  transactions={transactions} />
+      <Table mode={tableMode} transactions={groupedTransactions} />
     </div>
   );
 };
