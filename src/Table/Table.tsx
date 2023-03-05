@@ -1,78 +1,44 @@
-import { Row, Header, TableMode } from '../types';
+import { Transaction } from '../parser';
+import { TableMode } from '../types';
+import { columns } from '../constants';
 import style from './Table.module.scss';
 
-const TableHeader = ({ headers }: { headers: Header[] }) => (
+const TableHeader = () => (
   <thead>
     <tr>
-      {headers
-        .filter((item) => item.isVisible)
-        .map((item) => (
-          <th key={item.key}>{item.key}</th>
-        ))}
+      {columns.map(({ label }) => (
+        <th key={label}>{label}</th>
+      ))}
     </tr>
   </thead>
 );
 
-const GroupedBody = ({ operations }: { operations: Row[] }) => {
+const TableBody = ({ transactions }: { transactions: Transaction[] }) => {
   return (
     <tbody>
-      {operations.map((row, rowIndex) => (
-        <tr key={rowIndex}>
-          {row
-            .filter((item) => item.isVisible)
-            .map((item, itemIndex) => {
+      {transactions.map((transaction, index) => {
+        return (
+          <tr key={index}>
+            {columns.map((column, valueIndex) => {
+              const value = transaction[column.value];
               return (
-                <td onClick={() => navigator.clipboard.writeText(item.copyValue)} key={itemIndex}>
-                  {item.displayValue}
+                <td onClick={() => navigator.clipboard.writeText(value.copyValue)} key={valueIndex}>
+                  {value.displayValue}
                 </td>
               );
             })}
-        </tr>
-      ))}
+          </tr>
+        );
+      })}
     </tbody>
   );
 };
 
-const WholeBody = ({ operations }: { operations: Row[] }) => {
-  return (
-    <tbody>
-      {operations.map((row, rowIndex) => (
-        <tr key={rowIndex}>
-          {row
-            .filter((item) => item.isVisible)
-            .map((item, itemIndex) => {
-              return (
-                <td onClick={() => navigator.clipboard.writeText(item.copyValue)} key={itemIndex}>
-                  {item.displayValue}
-                </td>
-              );
-            })}
-        </tr>
-      ))}
-    </tbody>
-  );
-};
-
-const mappingTableBody: Record<TableMode, ({ operations }: { operations: Row[] }) => JSX.Element> = {
-  whole: WholeBody,
-  groups: GroupedBody,
-};
-
-export const Table = ({
-  headers,
-  operations,
-  mode,
-}: {
-  headers: Header[];
-  operations: Row[];
-  mode: TableMode;
-}) => {
-  const Body = mappingTableBody[mode];
-
+export const Table = ({ transactions, mode }: { transactions: Transaction[]; mode: TableMode }) => {
   return (
     <table className={style.table}>
-      <TableHeader headers={headers} />
-      <Body operations={operations} />
+      <TableHeader />
+      <TableBody transactions={transactions}/>
     </table>
   );
 };

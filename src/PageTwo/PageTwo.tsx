@@ -4,22 +4,21 @@ import { Parser } from '../parser';
 import style from './PageTwo.module.scss';
 import { Menu } from '../Menu';
 import { Table } from '../Table';
-import { Header, Property, TableMode } from '../types';
-import { columns } from '../constants';
+import { TableMode } from '../types';
 
-const visibleColumns: Property[] = [
-  'TRANSACTION DATE',
-  'TRANSACTION  NAME',
-  'AMOUNT',
-  'BALANCE',
-  'NARRATIVE',
-  'PAYEE',
-];
+// const visibleColumns: Property[] = [
+//   'TRANSACTION DATE',
+//   'TRANSACTION  NAME',
+//   'AMOUNT',
+//   'BALANCE',
+//   'NARRATIVE',
+//   'PAYEE',
+// ];
 
 const parser = new Parser();
 
 export const PageTwo = () => {
-  const [activeList, setActiveList] = useState(visibleColumns);
+  // const [activeList, setActiveList] = useState(visibleColumns);
   const { fileInfo } = useExportContext();
   const [tableMode, setTableMode] = useState<TableMode>('whole');
 
@@ -27,35 +26,34 @@ export const PageTwo = () => {
     setTableMode(mode);
   };
 
-  const parsedData = parser.parse(fileInfo.content);
+  const transactions = parser.parse(fileInfo.content);
+  console.log('transactions: ', transactions);
 
-  if (!parsedData) return null;
+  if (!transactions) return null;
 
-  const { operations } = parsedData;
+  // const filteredHeaders: Header[] = columns.map((item) => ({
+  //   key: item,
+  //   isVisible: activeList.includes(item),
+  // }));
 
-  const filteredHeaders: Header[] = columns.map((item) => ({
-    key: item,
-    isVisible: activeList.includes(item),
-  }));
+  // const filteredOperations = operations.map((row) =>
+  //   row.map((item) => ({
+  //     ...item,
+  //     isVisible: activeList.includes(item.key),
+  //   }))
+  // );
 
-  const filteredOperations = operations.map((row) =>
-    row.map((item) => ({
-      ...item,
-      isVisible: activeList.includes(item.key),
-    }))
-  );
+  // const handleButtonClick = (key: Property): void => {
+  //   setActiveList((state) =>
+  //     activeList.includes(key) ? state.filter((item) => item !== key) : [...state, key]
+  //   );
+  // };
 
-  const handleButtonClick = (key: Property): void => {
-    setActiveList((state) =>
-      activeList.includes(key) ? state.filter((item) => item !== key) : [...state, key]
-    );
-  };
-
-  const handleShowAllMenuCLick = () => setActiveList(columns);
+  // const handleShowAllMenuCLick = () => setActiveList(columns);
 
   return (
     <div className={style.wrapper}>
-      <div className={style.menuWrapper}>
+      {/* <div className={style.menuWrapper}>
         <Menu
           handleShowAllMenuCLick={handleShowAllMenuCLick}
           handleMenuReset={() => setActiveList(visibleColumns)}
@@ -65,8 +63,8 @@ export const PageTwo = () => {
           mode={tableMode}
           onClick={handleModeButtonClick}
         />
-      </div>
-      <Table mode={tableMode} headers={filteredHeaders} operations={filteredOperations} />
+      </div> */}
+      <Table mode={tableMode}  transactions={transactions} />
     </div>
   );
 };
