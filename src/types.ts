@@ -1,39 +1,19 @@
-export type Value = string | Date | number;
-export type Column = string;
-export type Header = { key: Column; isVisible: boolean };
-
-export interface Item {
-  key: Property;
-  value: Value;
-  copyValue: string;
-  displayValue: string;
-  isVisible: boolean;
-}
-
-export type Row = Item[];
-
-export type PropertyType = 'number' | 'date' | 'string';
-
-export type Property =
-  | 'ACCOUNT NUMBER'
-  | 'RECEIPT NUMBER'
-  | 'TRANSACTION DATE'
-  | 'PROCESS DATE'
-  | 'CARD NUMBER'
-  | 'TRANSACTION  NAME'
-  | 'AMOUNT'
-  | 'BALANCE'
-  | 'CHANNEL'
-  | 'REFERANCE'
-  | 'FUNDS TRANSFER'
-  | 'REFNO'
-  | 'TRANSACTION ID'
-  | 'IDENTIFICATION NUMBER'
-  | 'TAX NUMBER'
-  | 'D/C'
-  | 'NARRATIVE'
-  | 'APPLIED FX RATE'
-  | 'TRY EQUIVALENT'
-  | 'PAYEE';
+import { Transaction } from 'parser';
 
 export type TableMode = 'groups' | 'whole';
+
+export type Column =
+  | 'description'
+  | 'payee'
+  | 'transactionDate'
+  | 'processDate'
+  | 'amount'
+  | 'balance'
+  | 'memo'
+  | 'data';
+
+export type TransactionGroup = Record<string, Transaction[]>;
+
+export type Value = string | Date | number;
+export type PropertyType = 'number' | 'date' | 'string';
+export type RowMode = 'allColumns' | 'dataColumn';

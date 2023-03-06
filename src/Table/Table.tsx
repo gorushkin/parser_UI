@@ -1,78 +1,96 @@
-import { Row, Header, TableMode } from '../types';
+import { Transaction } from 'parser';
+import { columns } from '../constants';
 import style from './Table.module.scss';
+import { useEffect, useState } from 'react';
+import { convertValue, propertyTypesMapping } from '../utils';
+import { RowMode } from '../types';
 
-const TableHeader = ({ headers }: { headers: Header[] }) => (
+const DataColumn = ({ transaction }: { transaction: Transaction }) => (
+  <td colSpan={7} onClick={() => navigator.clipboard.writeText(transaction.data)}>
+    {transaction.data}
+  </td>
+);
+
+const AllColumns = ({ transaction }: { transaction: Transaction }) => {
+  return columns
+    .filter((item) => item.isVisible)
+    .map((column, i) => {
+      const type = propertyTypesMapping[column.value];
+      const { copyValue, displayValue } = convertValue(transaction[column.value], type);
+      return (
+        <td onClick={() => navigator.clipboard.writeText(copyValue)} key={i}>
+          {displayValue}
+        </td>
+      );
+    });
+};
+
+const mapping: Record<
+  RowMode,
+  ({ transaction }: { transaction: Transaction }) => JSX.Element[] | JSX.Element
+> = {
+  allColumns: AllColumns,
+  dataColumn: DataColumn,
+};
+
+const TableHeader = () => (
   <thead>
     <tr>
-      {headers
-        .filter((item) => item.isVisible)
-        .map((item) => (
-          <th key={item.key}>{item.key}</th>
-        ))}
+      {columns.map(({ label }) => (
+        <th key={label}>{label}</th>
+      ))}
     </tr>
   </thead>
 );
 
-const GroupedBody = ({ operations }: { operations: Row[] }) => {
+const TableRow = ({
+  transaction,
+  tableState,
+}: {
+  transaction: Transaction;
+  tableState: boolean;
+}) => {
+  const [rowMode, setRowMode] = useState<RowMode>('allColumns');
+
+  useEffect(() => {
+    setRowMode('allColumns');
+  }, [tableState]);
+
+  const handleModeClick = () => {
+    setRowMode((mode) => (mode === 'allColumns' ? 'dataColumn' : 'allColumns'));
+  };
+
   return (
-    <tbody>
-      {operations.map((row, rowIndex) => (
-        <tr key={rowIndex}>
-          {row
-            .filter((item) => item.isVisible)
-            .map((item, itemIndex) => {
-              return (
-                <td onClick={() => navigator.clipboard.writeText(item.copyValue)} key={itemIndex}>
-                  {item.displayValue}
-                </td>
-              );
-            })}
-        </tr>
-      ))}
-    </tbody>
+    <tr>
+      {mapping[rowMode]({ transaction })}
+      <td onClick={handleModeClick}>Show</td>
+    </tr>
   );
 };
 
-const WholeBody = ({ operations }: { operations: Row[] }) => {
-  return (
-    <tbody>
-      {operations.map((row, rowIndex) => (
-        <tr key={rowIndex}>
-          {row
-            .filter((item) => item.isVisible)
-            .map((item, itemIndex) => {
-              return (
-                <td onClick={() => navigator.clipboard.writeText(item.copyValue)} key={itemIndex}>
-                  {item.displayValue}
-                </td>
-              );
-            })}
-        </tr>
-      ))}
-    </tbody>
-  );
-};
-
-const mappingTableBody: Record<TableMode, ({ operations }: { operations: Row[] }) => JSX.Element> = {
-  whole: WholeBody,
-  groups: GroupedBody,
-};
+const TableBody = ({
+  transactions,
+  tableState,
+}: {
+  tableState: boolean;
+  transactions: Transaction[];
+}) => (
+  <tbody>
+    {transactions.map((transaction, i) => (
+      <TableRow tableState={tableState} key={i} transaction={transaction} />
+    ))}
+  </tbody>
+);
 
 export const Table = ({
-  headers,
-  operations,
-  mode,
+  transactions,
+  tableState,
 }: {
-  headers: Header[];
-  operations: Row[];
-  mode: TableMode;
-}) => {
-  const Body = mappingTableBody[mode];
-
-  return (
-    <table className={style.table}>
-      <TableHeader headers={headers} />
-      <Body operations={operations} />
-    </table>
-  );
-};
+  tableState: boolean;
+  transactions: Transaction[];
+}) => (
+  <table className={style.table}>
+    <TableHeader />
+    <TableBody tableState={tableState} transactions={transactions} />
+  </table>
+);
