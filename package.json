@@ -1,5 +1,5 @@
 {
-  "name": "parser",
+  "name": "parserUI",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "antd": "^5.2.3",
+    "parser": "file:../parserBack",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
