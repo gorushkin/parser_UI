@@ -1,4 +1,8 @@
+import { Transaction, Parser } from 'parser';
 import { createContext, ReactElement, useState, useMemo, useContext, useEffect } from 'react';
+import { read, write } from '../DB/db';
+
+const parser = new Parser();
 
 export type Page = 'first' | 'second';
 
@@ -13,7 +17,6 @@ ACCOUNT NUMBER	RECEIPT NUMBER	TRANSACTION DATE	PROCESS DATE	CARD NUMBER	TRANSACT
 00000000000000000	0	14.11.2022 20:17	14.11.2022	5355769057340218	BKM Pos Spending	-104.15	258.90	Diğer Banka Pos				2022005872445116		1111111111111	B	Referans :20064231820703177 Term Id :S07KT506- ISLEM NO :    -MIGROS ORTACA MUGLA      MUGLA        TR**** SAAT :20:17:55 Provizyon Kodu : 401294 - 0064 - D
 00000000000000000	0	15.11.2022 14:11	15.11.2022		Received Automatic Deposited EFT 	500.00	758.90	S00000 BANKA GENELİ				2022005902623441		1111111111111	A	Ref No:3745344 Money transfer order, ARTEM GORYUSHKIN/VAKIF KATILIM BANKASI A.Ş.-0210-90001-9882295 sorgu numaralı HIZLIPARA ÖDEME HİZMETLERİ VE ELEKTRONİK PARA A.Ş. tarafından My Name tarafına gelen EFT
 00000000000000000	0	15.11.2022 19:21	15.11.2022	5355769057340218	Overseas 3D Secure Spending	-96.07	662.83	Sanal POS				2022005915090502		1111111111111	B	Referans :20779111500468218 Term Id :KGIQHDDL- ISLEM NO :    -DIGITALOCEAN.COM         +3100000000  NL**** SAAT :19:21:47 Provizyon Kodu : 670567 - 020779 - D Kur ..:19,213250
-
 `;
 
 interface FileInfo {
@@ -27,6 +30,10 @@ interface Context {
   setFileInfo: React.Dispatch<React.SetStateAction<FileInfo>>;
   page: Page;
   handleStartClick: () => void;
+  isStorageEmpty: boolean;
+  saveTransactions: () => void;
+  transactions: Transaction[];
+  loadTransactions: () => Transaction[] | null;
 }
 
 const AppContext = createContext<Context | null>(null);
@@ -34,14 +41,35 @@ const AppContext = createContext<Context | null>(null);
 const AppContextProvider = ({ children }: { children: ReactElement }) => {
   const [fileInfo, setFileInfo] = useState<FileInfo>({ name: null, size: null, content: null });
   const [page, setPage] = useState<Page>('first');
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isStorageEmpty, setIsStorageEmpty] = useState<boolean>(true);
+
+  useEffect(() => {
+    setIsStorageEmpty(!read());
+  }, []);
 
   const handleStartClick = () => {
+    const data = parser.parse(fileInfo.content);
+    setTransactions(data || []);
+    setPage('second');
+  };
+
+  const saveTransactions = () => {
+    write(transactions);
+  };
+
+  const loadTransactions = () => {
+    const data = read();
+    if (!data) return;
+    setTransactions(data);
     setPage('second');
   };
 
   useEffect(() => {
-    setFileInfo((state) => ({ ...state, content: tempContent }));
-    setPage('second');
+    // setFileInfo((state) => ({ ...state, content: tempContent }));
+    // const data = parser.parse(fileInfo.content);
+    // setTransactions(data || []);
+    // setPage('second');
   }, []);
 
   const context = useMemo(
@@ -50,8 +78,12 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
       setFileInfo,
       page,
       handleStartClick,
+      isStorageEmpty,
+      saveTransactions,
+      transactions,
+      loadTransactions,
     }),
-    [fileInfo, page]
+    [fileInfo, page, transactions, isStorageEmpty, saveTransactions, loadTransactions]
   );
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;
