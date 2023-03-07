@@ -1,5 +1,5 @@
 import { Transaction } from 'parser';
-
+// TODO: add backups
 export const read = (): null | Transaction[] => {
   const data = localStorage.getItem('data');
   if (!data) return null;

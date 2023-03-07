@@ -1,17 +1,9 @@
-import { Column, PropertyType, Value } from './types';
+import * as dayjs from 'dayjs';
+import { Column, PropertyType } from './types';
 
 type ClassNames = (string | true | false)[];
 
 export const cn = (...classnames: ClassNames) => classnames.filter((item) => !!item).join(' ');
-
-const parseDate = (value: string) => {
-  const [rawDate, rowTime = '00:00'] = value.split(' ');
-  const [day, month, year] = rawDate.split('.');
-  const [hour, minutes] = rowTime.split(':');
-  const time = `${hour}:${minutes}:00`;
-  const date = `${year}-${month}-${day}`;
-  return new Date(`${date}T${time}`);
-};
 
 export const propertyTypesMapping: Record<Column, PropertyType> = {
   amount: 'number',
@@ -22,29 +14,39 @@ export const propertyTypesMapping: Record<Column, PropertyType> = {
   processDate: 'date',
   transactionDate: 'date',
   memo: 'string',
+  isClear: 'boolean',
 };
 
+const stringToDate = (value: string): string => dayjs(value).format('DD.MM.YYYY');
+
+const numberToMoney = (value: number, decimalPlaces = 2) =>
+  `${value?.toLocaleString(undefined, {
+    minimumFractionDigits: decimalPlaces,
+    maximumFractionDigits: decimalPlaces,
+  })}`;
+
 export const convertValue = (
-  value: string,
+  value: string | number | boolean,
   type: PropertyType
-): { displayValue: string; copyValue: string; value: Value } => {
+): { displayValue: string; copyValue: string } => {
   const mapping = {
-    number: (value = '') => ({
-      value: Number(value.replace(',', '')),
-      displayValue: value,
-      copyValue: value.replace(',', ''),
+    number: (value: string) => ({
+      displayValue: numberToMoney(Number(value)),
+      copyValue: value.toString(),
     }),
     string: (value = '') => ({
-      value: value,
       displayValue: value,
       copyValue: value,
     }),
     date: (value = '') => ({
-      value: parseDate(value),
+      displayValue: stringToDate(value),
+      copyValue: stringToDate(value),
+    }),
+    boolean: (value: string) => ({
       displayValue: value,
       copyValue: value,
     }),
   };
 
-  return mapping[type](value);
+  return mapping[type](value.toString());
 };

@@ -9,4 +9,5 @@ export const columns: { label: string; value: Column; isVisible: boolean }[] = [
   { label: 'Payee', value: 'payee', isVisible: true },
   { label: 'Memo', value: 'memo', isVisible: true },
   { label: 'Show raw', value: 'data', isVisible: false },
+  { label: '*', value: 'isReady', isVisible: false },
 ];

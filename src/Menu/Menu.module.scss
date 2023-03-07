@@ -56,6 +56,19 @@
   }
 }
 
+
+.info {
+  margin-bottom: 1rem;
+  background: rgb(20, 95, 5);
+  color: #ffffff;
+  display: inline-block;
+  padding: 0 25px;
+
+  &Warning {
+    background: red;
+  }
+}
+
 .controls {
   margin-bottom: 1rem;
   display: flex;

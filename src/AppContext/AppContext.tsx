@@ -1,10 +1,9 @@
 import { Transaction, Parser } from 'parser';
 import { createContext, ReactElement, useState, useMemo, useContext, useEffect } from 'react';
 import { read, write } from '../DB/db';
+import { Context, FileInfo, Page, Func } from '../types';
 
 const parser = new Parser();
-
-export type Page = 'first' | 'second';
 
 const tempContent = `
 ACCOUNT NUMBER	RECEIPT NUMBER	TRANSACTION DATE	PROCESS DATE	CARD NUMBER	TRANSACTION  NAME	AMOUNT	BALANCE	CHANNEL	REFERANCE	FUNDS TRANSFER	REFNO	TRANSACTION ID	IDENTIFICATION NUMBER	TAX NUMBER	D/C	NARRATIVE	APPLIED FX RATE	TRY EQUIVALENT
@@ -19,23 +18,6 @@ ACCOUNT NUMBER	RECEIPT NUMBER	TRANSACTION DATE	PROCESS DATE	CARD NUMBER	TRANSACT
 00000000000000000	0	15.11.2022 19:21	15.11.2022	5355769057340218	Overseas 3D Secure Spending	-96.07	662.83	Sanal POS				2022005915090502		1111111111111	B	Referans :20779111500468218 Term Id :KGIQHDDL- ISLEM NO :    -DIGITALOCEAN.COM         +3100000000  NL**** SAAT :19:21:47 Provizyon Kodu : 670567 - 020779 - D Kur ..:19,213250
 `;
 
-interface FileInfo {
-  name: string | null;
-  size: number | null;
-  content: string | null;
-}
-
-interface Context {
-  fileInfo: FileInfo;
-  setFileInfo: React.Dispatch<React.SetStateAction<FileInfo>>;
-  page: Page;
-  handleStartClick: () => void;
-  isStorageEmpty: boolean;
-  saveTransactions: () => void;
-  transactions: Transaction[];
-  loadTransactions: () => Transaction[] | null;
-}
-
 const AppContext = createContext<Context | null>(null);
 
 const AppContextProvider = ({ children }: { children: ReactElement }) => {
@@ -43,25 +25,49 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
   const [page, setPage] = useState<Page>('first');
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isStorageEmpty, setIsStorageEmpty] = useState<boolean>(true);
+  const [isDataSynced, setIsDataSynced] = useState(false);
 
   useEffect(() => {
     setIsStorageEmpty(!read());
   }, []);
 
+  const compareData = () => {
+    const savedData = read();
+    setIsDataSynced(JSON.stringify(savedData) === JSON.stringify(transactions));
+  };
+
+  useEffect(() => {
+    compareData();
+  }, [transactions]);
+
+  const updateTransactions = (func: Func) => {
+    setTransactions(func);
+  };
+
+  const writeTransactions = (data: Transaction[]) => {
+    const extendedTransactions: Transaction[] = data.map((item) => ({
+      ...item,
+      isReady: false,
+    }));
+    setTransactions(extendedTransactions);
+
+  };
+
   const handleStartClick = () => {
     const data = parser.parse(fileInfo.content);
-    setTransactions(data || []);
+    writeTransactions(data || []);
     setPage('second');
   };
 
   const saveTransactions = () => {
     write(transactions);
+    compareData();
   };
 
   const loadTransactions = () => {
     const data = read();
     if (!data) return;
-    setTransactions(data);
+    writeTransactions(data);
     setPage('second');
   };
 
@@ -82,8 +88,19 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
       saveTransactions,
       transactions,
       loadTransactions,
+      updateTransactions,
+      isDataSynced,
     }),
-    [fileInfo, page, transactions, isStorageEmpty, saveTransactions, loadTransactions]
+    [
+      fileInfo,
+      page,
+      transactions,
+      isStorageEmpty,
+      saveTransactions,
+      loadTransactions,
+      updateTransactions,
+      isDataSynced,
+    ]
   );
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;

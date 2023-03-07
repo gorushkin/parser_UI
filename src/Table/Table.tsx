@@ -2,8 +2,9 @@ import { Transaction } from 'parser';
 import { columns } from '../constants';
 import style from './Table.module.scss';
 import { useEffect, useState } from 'react';
-import { convertValue, propertyTypesMapping } from '../utils';
+import { cn, convertValue, propertyTypesMapping } from '../utils';
 import { RowMode } from '../types';
+import { useExportContext } from '../AppContext/AppContext';
 
 const DataColumn = ({ transaction }: { transaction: Transaction }) => (
   <td colSpan={7} onClick={() => navigator.clipboard.writeText(transaction.data)}>
@@ -16,7 +17,8 @@ const AllColumns = ({ transaction }: { transaction: Transaction }) => {
     .filter((item) => item.isVisible)
     .map((column, i) => {
       const type = propertyTypesMapping[column.value];
-      const { copyValue, displayValue } = convertValue(transaction[column.value], type);
+      const value = transaction[column.value];
+      const { copyValue, displayValue } = convertValue(value, type);
       return (
         <td onClick={() => navigator.clipboard.writeText(copyValue)} key={i}>
           {displayValue}
@@ -50,6 +52,8 @@ const TableRow = ({
   transaction: Transaction;
   tableState: boolean;
 }) => {
+  const { updateTransactions } = useExportContext();
+
   const [rowMode, setRowMode] = useState<RowMode>('allColumns');
 
   useEffect(() => {
@@ -60,10 +64,20 @@ const TableRow = ({
     setRowMode((mode) => (mode === 'allColumns' ? 'dataColumn' : 'allColumns'));
   };
 
+  const handleChange = () => {
+    updateTransactions((state) =>
+      state.map((item) => (item.id === transaction.id ? { ...item, isClear: !item.isClear } : item))
+    );
+  };
+
   return (
     <tr>
       {mapping[rowMode]({ transaction })}
       <td onClick={handleModeClick}>Show</td>
+      <td
+        className={cn(style.checkbox, transaction.isClear && style.checkboxIsClear)}
+        onClick={handleChange}
+      />
     </tr>
   );
 };
