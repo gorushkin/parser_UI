@@ -1,4 +1,15 @@
-import { Transaction as ParserTransaction } from 'parser';
+export type Transaction = {
+  id: string;
+  description: string;
+  payee: string;
+  transactionDate: string;
+  processDate: string;
+  amount: number;
+  balance: number;
+  memo: string;
+  data: string;
+  isClear: boolean;
+};
 
 export type TableMode = 'groups' | 'whole';
 
@@ -13,7 +24,7 @@ export type Column =
   | 'data'
   | 'isClear';
 
-export type TransactionGroup = Record<string, ParserTransaction[]>;
+export type TransactionGroup = Record<string, Transaction[]>;
 
 export type Value = string | Date | number | boolean;
 export type PropertyType = 'number' | 'date' | 'string' | 'boolean';
@@ -22,7 +33,7 @@ export type RowMode = 'allColumns' | 'dataColumn';
 export type FileInfo = {
   name: string | null;
   size: number | null;
-  content: string | null;
+  content: File | null;
 };
 
 export type Page = 'first' | 'second';
@@ -34,7 +45,7 @@ export type Context = {
   handleStartClick: () => void;
   isStorageEmpty: boolean;
   saveTransactions: () => void;
-  transactions: ParserTransaction[];
+  transactions: Transaction[];
   loadTransactions: () => void;
   updateTransactions: (func: Func) => void;
   isDataSynced: boolean;
@@ -44,4 +55,4 @@ export type Context = {
 //   isReady: boolean;
 // };
 
-export type Func = (transactions: ParserTransaction[]) => ParserTransaction[];
+export type Func = (transactions: Transaction[]) => Transaction[];

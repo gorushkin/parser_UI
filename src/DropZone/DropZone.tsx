@@ -9,9 +9,9 @@ const DropZone = ({ className }: { className: string }) => {
   const handleFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const { files } = e.dataTransfer;
-    for (const element of files) {
-      const { size, name } = element;
-      const content = await element.text();
+    for (const file of files) {
+      const { size, name } = file;
+      const content = await file;
       setFileInfo({ size, name, content });
     }
   };
