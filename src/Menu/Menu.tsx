@@ -1,6 +1,7 @@
 import { cn } from '../utils';
 import style from './Menu.module.scss';
 import { useExportContext } from '../AppContext/AppContext';
+import { Button } from '../Button/Button';
 
 export const Menu = ({ onResetClick }: { onResetClick: () => void }) => {
   const { saveTransactions, isDataSynced } = useExportContext();
@@ -13,16 +14,19 @@ export const Menu = ({ onResetClick }: { onResetClick: () => void }) => {
     <div className={style.wrapper}>
       <div className={cn(style.info, !isDataSynced && style.infoWarning)}>{message}</div>
       <div className={style.controls}>
-        <button onClick={onResetClick} className={cn(style.button, style.buttonReset)}>
+        <Button color='orange' onClick={onResetClick}>
           Reset
-        </button>
+        </Button>
+        <Button color='orange' onClick={onResetClick}>
+          Back
+        </Button>
         <div className={style.dataButtons}>
-          <button onClick={onResetClick} className={cn(style.button, style.buttonLoad)}>
+          <Button onClick={onResetClick} color='blue'>
             Load
-          </button>
-          <button onClick={handleSaveClick} className={cn(style.button, style.buttonSave)}>
+          </Button>
+          <Button onClick={handleSaveClick} color='green'>
             Save
-          </button>
+          </Button>
         </div>
       </div>
     </div>

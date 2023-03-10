@@ -20,42 +20,74 @@
     }
   }
 
-  &Header {
-    border: 1px solid blue;
-
-    &Active,
-    &:hover {
-      background: blue;
-      color: white;
-    }
-  }
-
-  &Mode {
-    border: 1px solid rgb(123, 238, 15);
-
-    &Active,
-    &:hover {
-      background: rgb(123, 238, 15);
-    }
-  }
-
-  &Reset {
+  &Orange {
     $main-color: rgb(236, 104, 27);
-    border: 1px solid $main-color;
     background: $main-color;
     color: #ffffff;
+
+    &:hover {
+      background: $main-color;
+    }
+
+    &:disabled {
+      background: #ffffff ;
+      color: #a8a2a2;
+      border: 1px solid #aeb1b6;
+    }
   }
 
-  &Save {
+  &Green {
     $main-color: rgb(63, 226, 30);
-    border: 1px solid $main-color;
-    background: $main-color;
-  }
-
-  &Load {
-    $main-color: rgb(30, 66, 226);
-    border: 1px solid $main-color;
     background: $main-color;
     color: #ffffff;
+
+    &:hover {
+      background: $main-color;
+    }
+
+    &:disabled {
+      background: #ffffff ;
+      color: #a8a2a2;
+      border: 1px solid #aeb1b6;
+    }
   }
+
+  // &Header {
+  //   border: 1px solid blue;
+
+  //   &Active,
+  //   &:hover {
+  //     background: blue;
+  //     color: white;
+  //   }
+  // }
+
+  // &Mode {
+  //   border: 1px solid rgb(123, 238, 15);
+
+  //   &Active,
+  //   &:hover {
+  //     background: rgb(123, 238, 15);
+  //   }
+  // }
+
+  // &Reset {
+  //   $main-color: rgb(236, 104, 27);
+  //   border: 1px solid $main-color;
+  //   background: $main-color;
+  //   color: #ffffff;
+  // }
+
+  // &Save {
+  //   $main-color: rgb(63, 226, 30);
+  //   border: 1px solid $main-color;
+  //   background: $main-color;
+  // }
+
+  // &Load {
+  //   $main-color: rgb(30, 66, 226);
+  //   border: 1px solid $main-color;
+  //   background: $main-color;
+  //   color: #ffffff;
+  // }
 }
