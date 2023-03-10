@@ -9,12 +9,14 @@ export const Button = ({
   className = '',
   label,
   disabled = false,
+  children,
 }: {
   color?: ButtonType;
   onClick?: () => void;
   className?: string;
-  label: string;
+  label?: string;
   disabled?: boolean;
+  children?: string;
 }) => {
   const colorMapping: Record<ButtonType, string> = {
     blue: style.buttonBlue,
@@ -23,13 +25,17 @@ export const Button = ({
     orange: style.buttonOrange,
   };
 
+  console.log(color);
+
+  console.log(colorMapping[color]);
+
   return (
     <button
       disabled={disabled}
       onClick={onClick}
       className={cn(className, style.button, colorMapping[color])}
     >
-      {label}
+      {label || children}
     </button>
   );
 };
