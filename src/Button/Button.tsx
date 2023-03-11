@@ -1,4 +1,4 @@
-import { cn } from '../utils';
+import { cn } from '../utils/utils';
 import style from './Button.module.scss';
 
 type ButtonType = 'green' | 'blue' | 'red' | 'orange';

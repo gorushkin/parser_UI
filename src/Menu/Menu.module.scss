@@ -26,6 +26,8 @@
 }
 
 .buttonWrapper {
+  display: flex;
+  flex-wrap: nowrap;
   button + button {
     margin-left: 15px;
   }

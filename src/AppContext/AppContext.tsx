@@ -1,12 +1,23 @@
-import { createContext, ReactElement, useState, useMemo, useContext, useEffect } from 'react';
-import { read, write } from '../DB/db';
-import { sendFile } from '../services';
+import {
+  createContext,
+  ReactElement,
+  useState,
+  useMemo,
+  useContext,
+  useEffect,
+} from 'react';
+import { read, write } from '../utils/db';
+import { sendFile } from '../services/api';
 import { Context, FileInfo, Page, Func, Transaction } from '../types';
 
 const AppContext = createContext<Context | null>(null);
 
 const AppContextProvider = ({ children }: { children: ReactElement }) => {
-  const [fileInfo, setFileInfo] = useState<FileInfo>({ name: null, size: null, content: null });
+  const [fileInfo, setFileInfo] = useState<FileInfo>({
+    name: null,
+    size: null,
+    content: null,
+  });
   const [page, setPage] = useState<Page>('first');
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isStorageEmpty, setIsStorageEmpty] = useState<boolean>(true);
@@ -39,7 +50,8 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
 
   const handleStartClick = async () => {
     if (!fileInfo.content) return;
-    const transactions = await sendFile(fileInfo.content);
+    const { transactions } = await sendFile(fileInfo.content);
+    console.log('transactions: ', transactions);
     writeTransactions(transactions);
     setPage('second');
   };
@@ -56,13 +68,6 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
     setPage('second');
   };
 
-  useEffect(() => {
-    // setFileInfo((state) => ({ ...state, content: tempContent }));
-    // const data = parser.parse(fileInfo.content);
-    // setTransactions(data || []);
-    // setPage('second');
-  }, []);
-
   const context = useMemo(
     () => ({
       fileInfo,
@@ -75,7 +80,7 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
       loadTransactions,
       updateTransactions,
       isDataSynced,
-      setPage
+      setPage,
     }),
     [
       fileInfo,
@@ -86,7 +91,7 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
       loadTransactions,
       updateTransactions,
       isDataSynced,
-      setPage
+      setPage,
     ]
   );
 

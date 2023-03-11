@@ -1,8 +1,8 @@
 import { useState } from 'react';
+import { useExportContext } from '../../AppContext/AppContext';
+import { Table } from '../../components/Table';
+import { Menu } from '../../Menu';
 import style from './PageTwo.module.scss';
-import { Menu } from '../Menu';
-import { Table } from '../Table';
-import { useExportContext } from '../AppContext/AppContext';
 
 export const PageTwo = () => {
   const { transactions } = useExportContext();

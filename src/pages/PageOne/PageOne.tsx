@@ -1,9 +1,9 @@
-import { useExportContext } from '../AppContext/AppContext';
-import { Button } from '../Button/Button';
-import { DropZone } from '../DropZone';
-import { getTest } from '../services';
+import { useExportContext } from '../../AppContext/AppContext';
+import { Button } from '../../Button/Button';
+import { getTest } from '../../services/api';
 import style from './PageOne.module.scss';
-import { useFetch } from '../useFetch';
+import { useFetch } from '../../hooks/useFetch';
+import { DropZone } from '../../components/DropZone';
 
 export const PageOne = () => {
   const { fileInfo, handleStartClick, isStorageEmpty, loadTransactions } =

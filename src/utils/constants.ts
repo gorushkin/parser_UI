@@ -1,4 +1,4 @@
-import { Column } from './types';
+import { Column } from '../types';
 
 export const columns: { label: string; value: Column; isVisible: boolean }[] = [
   { label: 'Transaction Date', value: 'transactionDate', isVisible: true },

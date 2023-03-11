@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useExportContext } from '../../AppContext/AppContext';
 import style from './DropZone.module.scss';
-import { useExportContext } from '../AppContext/AppContext';
-import { cn } from '../utils';
+import { cn } from '../../utils/utils';
+import React, { useState } from 'react';
 
 const DropZone = ({ className }: { className: string }) => {
   const { setFileInfo, fileInfo } = useExportContext();
@@ -31,7 +31,6 @@ const DropZone = ({ className }: { className: string }) => {
   return (
     <div
       onDragOver={handleFileDragOver}
-
       onDragLeave={handleFileDragLeave}
       onDrop={handleFileDrop}
       className={cn(
