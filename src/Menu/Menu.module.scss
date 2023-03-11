@@ -1,61 +1,13 @@
 .wrapper {
   position: relative;
   padding-top: 25px;
-  .button {
-    border-radius: 5px;
-    padding: 10px;
-    font-size: 14px;
-    position: relative;
-    transition: all 0.1s;
-
-    &:hover {
-      transform: scale(1.2); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
-    }
-
-
-    &Header {
-      border: 1px solid blue;
-
-      &Active,
-      &:hover {
-        background: blue;
-        color: white;
-      }
-    }
-
-    &Mode {
-      border: 1px solid rgb(123, 238, 15);
-
-      &Active,
-      &:hover {
-        background: rgb(123, 238, 15);
-
-      }
-    }
-
-    &Reset {
-      $main-color: rgb(236, 104, 27);
-      border: 1px solid $main-color;
-      background: $main-color;
-      color: #ffffff;
-
-    }
-
-    &Save {
-      $main-color: rgb(63, 226, 30);
-      border: 1px solid $main-color;
-      background: $main-color;
-    }
-
-    &Load {
-      $main-color: rgb(30, 66, 226);
-      border: 1px solid $main-color;
-      background: $main-color;
-      color: #ffffff;
-    }
-  }
 }
 
+.row {
+  display: flex;
+  margin-bottom: 1rem;
+  padding: 0 10px;
+}
 
 .info {
   margin-bottom: 1rem;
@@ -70,25 +22,15 @@
 }
 
 .controls {
-  margin-bottom: 1rem;
-  display: flex;
   justify-content: space-between;
-  padding: 0 10px;
 }
 
-.menu {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  gap: 5px;
-  margin-bottom: 1rem;
-}
-
-.dataButtons {
-  margin-left:  auto;
+.buttonWrapper {
   button + button {
     margin-left: 15px;
+  }
+
+  &Right {
+    margin-left: auto;
   }
 }

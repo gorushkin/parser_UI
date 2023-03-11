@@ -4,7 +4,7 @@ import { useExportContext } from '../AppContext/AppContext';
 import { Button } from '../Button/Button';
 
 export const Menu = ({ onResetClick }: { onResetClick: () => void }) => {
-  const { saveTransactions, isDataSynced } = useExportContext();
+  const { saveTransactions, isDataSynced, setPage } = useExportContext();
 
   const message = isDataSynced ? 'The date is synced' : 'The date is not synced';
 
@@ -13,19 +13,31 @@ export const Menu = ({ onResetClick }: { onResetClick: () => void }) => {
   return (
     <div className={style.wrapper}>
       <div className={cn(style.info, !isDataSynced && style.infoWarning)}>{message}</div>
-      <div className={style.controls}>
-        <Button color='orange' onClick={onResetClick}>
-          Reset
-        </Button>
-        <Button color='orange' onClick={onResetClick}>
-          Back
-        </Button>
-        <div className={style.dataButtons}>
+      <div className={cn(style.controls, style.row)}>
+        <div className={style.buttonWrapper}>
+          <Button color='orange' onClick={onResetClick}>
+            Reset
+          </Button>
+          <Button color='orange' onClick={() => setPage('first')}>
+            Back
+          </Button>
+        </div>
+        <div className={style.buttonWrapper}>
           <Button onClick={onResetClick} color='blue'>
-            Load
+            Load from LS
           </Button>
           <Button onClick={handleSaveClick} color='green'>
-            Save
+            Save to LS
+          </Button>
+        </div>
+      </div>
+      <div className={style.row}>
+        <div className={cn(style.buttonWrapper, style.buttonWrapperRight)}>
+          <Button onClick={onResetClick} color='blue'>
+            Load from disk
+          </Button>
+          <Button onClick={handleSaveClick} color='green'>
+            Save to disk
           </Button>
         </div>
       </div>
