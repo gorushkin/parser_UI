@@ -3,8 +3,10 @@ import { Transaction } from './types';
 const BASE_URL = 'http://127.0.0.1:3000';
 
 export const getTest = async () => {
-  const res = await fetch(BASE_URL);
-  return await res.json();
+  await fetch(BASE_URL);
+  // return new Promise((resolve, reject) => {
+  //   setTimeout(() => resolve(res), 2000);
+  // });
 };
 
 export const sendFile = async (file: File) => {
