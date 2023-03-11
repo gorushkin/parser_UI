@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import style from './DropZone.module.scss';
 import { useExportContext } from '../AppContext/AppContext';
+import { cn } from '../utils';
 
 const DropZone = ({ className }: { className: string }) => {
   const { setFileInfo, fileInfo } = useExportContext();
-
+  const [isZoneActive, setIsZoneActive] = useState(false);
 
   const handleFileDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    setIsZoneActive(false);
     const { files } = e.dataTransfer;
     for (const file of files) {
       const { size, name } = file;
@@ -16,15 +18,26 @@ const DropZone = ({ className }: { className: string }) => {
     }
   };
 
-  const handleFileDrag = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleFileDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    setIsZoneActive(true);
+  };
+
+  const handleFileDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsZoneActive(false);
   };
 
   return (
     <div
-      onDragOver={handleFileDrag}
+      onDragOver={handleFileDragOver}
+
+      onDragLeave={handleFileDragLeave}
       onDrop={handleFileDrop}
-      className={`${style.wrapper} ${className}`}
+      className={cn(
+        `${style.wrapper} ${className}`,
+        isZoneActive && style.wrapperActive
+      )}
     >
       {fileInfo.name ? fileInfo.name : `Drag'n'drop your file`}
     </div>
