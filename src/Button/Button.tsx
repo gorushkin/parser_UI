@@ -10,6 +10,7 @@ export const Button = ({
   label,
   disabled = false,
   children,
+  isLoading = false,
 }: {
   color?: ButtonType;
   onClick?: () => void;
@@ -17,6 +18,7 @@ export const Button = ({
   label?: string;
   disabled?: boolean;
   children?: string;
+  isLoading?: boolean;
 }) => {
   const colorMapping: Record<ButtonType, string> = {
     blue: style.buttonBlue,
@@ -29,9 +31,14 @@ export const Button = ({
     <button
       disabled={disabled}
       onClick={onClick}
-      className={cn(className, style.button, colorMapping[color])}
+      className={cn(
+        className,
+        style.button,
+        colorMapping[color],
+        isLoading && style.buttonLoading
+      )}
     >
-      {label || children}
+      {isLoading ? <div className={style.loader} /> : label || children}
     </button>
   );
 };
