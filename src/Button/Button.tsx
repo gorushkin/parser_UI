@@ -25,10 +25,6 @@ export const Button = ({
     orange: style.buttonOrange,
   };
 
-  console.log(color);
-
-  console.log(colorMapping[color]);
-
   return (
     <button
       disabled={disabled}
