@@ -1,4 +1,4 @@
-import { cn } from '../utils';
+import { cn } from '../utils/utils';
 import style from './Menu.module.scss';
 import { useExportContext } from '../AppContext/AppContext';
 import { Button } from '../Button/Button';

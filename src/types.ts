@@ -12,6 +12,9 @@ export type Transaction = {
   isClear: boolean;
 };
 
+export type Payee = { id: string; name: string; displayName: string };
+export type Payees = Record<string, Payee>;
+
 export type TableMode = 'groups' | 'whole';
 
 export type Column =
@@ -54,3 +57,5 @@ export type Context = {
 };
 
 export type Func = (transactions: Transaction[]) => Transaction[];
+
+export type FileResponse = { transactions: Transaction[]; payees: Payees };

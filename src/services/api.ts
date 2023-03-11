@@ -1,4 +1,4 @@
-import { Transaction } from './types';
+import { FileResponse } from '../types';
 
 const BASE_URL = 'http://127.0.0.1:3000';
 
@@ -10,10 +10,11 @@ export const getTest = async () => {
 };
 
 export const sendFile = async (file: File) => {
+  console.log('file: ', file);
   const res = await fetch(`${BASE_URL}/file`, {
     method: 'POST',
     body: file,
   });
 
-  return (await res.json()) as Transaction[];
+  return (await res.json()) as FileResponse;
 };

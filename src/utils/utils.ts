@@ -1,5 +1,5 @@
 import * as dayjs from 'dayjs';
-import { Column, PropertyType } from './types';
+import { Column, PropertyType } from '../types';
 
 type ClassNames = (string | true | false)[];
 

@@ -1,6 +1,6 @@
 import React from 'react';
+import { useExportContext } from '../../AppContext/AppContext';
 import style from './DropZone.module.scss';
-import { useExportContext } from '../AppContext/AppContext';
 
 const DropZone = ({ className }: { className: string }) => {
   const { setFileInfo, fileInfo } = useExportContext();

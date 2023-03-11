@@ -1,6 +1,7 @@
-import { AppContextProvider, Page, useExportContext } from '../AppContext/AppContext';
-import { PageOne } from '../PageOne';
-import { PageTwo } from '../PageTwo';
+import { AppContextProvider, useExportContext } from '../AppContext/AppContext';
+import { PageOne } from '../pages/PageOne';
+import { PageTwo } from '../pages/PageTwo';
+import { Page } from '../types';
 import style from './App.module.scss';
 
 const pageMapping: Record<Page, JSX.Element> = {
