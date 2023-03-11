@@ -1,7 +1,8 @@
 export type Transaction = {
   id: string;
   description: string;
-  payee: string;
+  payeeId: string;
+  payeeName: string;
   transactionDate: string;
   processDate: string;
   amount: number;
@@ -15,7 +16,7 @@ export type TableMode = 'groups' | 'whole';
 
 export type Column =
   | 'description'
-  | 'payee'
+  | 'payeeName'
   | 'transactionDate'
   | 'processDate'
   | 'amount'
@@ -49,10 +50,7 @@ export type Context = {
   loadTransactions: () => void;
   updateTransactions: (func: Func) => void;
   isDataSynced: boolean;
+  setPage: React.Dispatch<React.SetStateAction<Page>>;
 };
-
-// export type Transaction = ParserTransaction & {
-//   isReady: boolean;
-// };
 
 export type Func = (transactions: Transaction[]) => Transaction[];

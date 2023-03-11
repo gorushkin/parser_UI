@@ -10,7 +10,7 @@ export const propertyTypesMapping: Record<Column, PropertyType> = {
   balance: 'number',
   data: 'string',
   description: 'string',
-  payee: 'string',
+  payeeName: 'string',
   processDate: 'date',
   transactionDate: 'date',
   memo: 'string',

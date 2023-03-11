@@ -75,6 +75,7 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
       loadTransactions,
       updateTransactions,
       isDataSynced,
+      setPage
     }),
     [
       fileInfo,
@@ -85,6 +86,7 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
       loadTransactions,
       updateTransactions,
       isDataSynced,
+      setPage
     ]
   );
 
