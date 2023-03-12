@@ -12,7 +12,8 @@
     "dayjs": "^1.11.7",
     "parser": "file:../parser_app",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.9.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",

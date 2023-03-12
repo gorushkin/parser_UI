@@ -1,14 +1,14 @@
 import { useExportContext } from '../../AppContext/AppContext';
 import { Button } from '../../components/Button/Button';
 import { getTest } from '../../services/api';
-import style from './PageOne.module.scss';
+import style from './StartPage.module.scss';
 import { useFetch } from '../../hooks/useFetch';
 import { DropZone } from './DropZone';
 import { useState } from 'react';
 import { FileForm } from './FileForm';
 import { Files } from './Files';
 
-export const PageOne = () => {
+export const StartPage = () => {
   const { fileInfo } = useExportContext();
 
   const { handler, isLoading } = useFetch(getTest);
