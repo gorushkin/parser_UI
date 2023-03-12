@@ -1,6 +1,6 @@
-import { useExportContext } from '../../AppContext/AppContext';
+import { useExportContext } from '../../../AppContext/AppContext';
 import style from './DropZone.module.scss';
-import { cn } from '../../utils/utils';
+import { cn } from '../../../utils/utils';
 import React, { useState } from 'react';
 
 const DropZone = ({ className }: { className: string }) => {

@@ -1,4 +1,4 @@
-import { cn } from '../utils/utils';
+import { cn } from '../../utils/utils';
 import style from './Button.module.scss';
 
 type ButtonType = 'green' | 'blue' | 'red' | 'orange';
@@ -13,7 +13,7 @@ export const Button = ({
   isLoading = false,
 }: {
   color?: ButtonType;
-  onClick?: () => void;
+  onClick?: (e) => void;
   className?: string;
   label?: string;
   disabled?: boolean;

@@ -12,6 +12,8 @@ export type Transaction = {
   isClear: boolean;
 };
 
+export type Transactions = Transaction[];
+
 export type Payee = { id: string; name: string; displayName: string };
 export type Payees = Record<string, Payee>;
 
@@ -28,7 +30,7 @@ export type Column =
   | 'data'
   | 'isClear';
 
-export type TransactionGroup = Record<string, Transaction[]>;
+export type TransactionGroup = Record<string, Transactions>;
 
 export type Value = string | Date | number | boolean;
 export type PropertyType = 'number' | 'date' | 'string' | 'boolean';
@@ -46,16 +48,18 @@ export type Context = {
   fileInfo: FileInfo;
   setFileInfo: React.Dispatch<React.SetStateAction<FileInfo>>;
   page: Page;
-  handleStartClick: () => void;
+  onStartClick: (name: string) => void;
   isStorageEmpty: boolean;
-  saveTransactions: () => void;
-  transactions: Transaction[];
-  loadTransactions: () => void;
+  transactions: Transactions;
   updateTransactions: (func: Func) => void;
   isDataSynced: boolean;
   setPage: React.Dispatch<React.SetStateAction<Page>>;
 };
 
-export type Func = (transactions: Transaction[]) => Transaction[];
+export type Func = (transactions: Transactions) => Transactions;
 
-export type FileResponse = { transactions: Transaction[]; payees: Payees };
+export type FileResponse = { transactions: Transactions; payees: Payees };
+
+export type Sheet = { name: string; transactions: Transactions };
+
+export type Filenames = string[]

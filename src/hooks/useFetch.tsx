@@ -5,7 +5,7 @@ export const useFetch = (request: Function) => {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
 
-  const fetchData = async (params: any) => {
+  const fetchData = async (params?: any) => {
     setIsLoading(true);
     try {
       const response = await request(params);

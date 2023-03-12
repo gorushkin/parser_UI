@@ -2,19 +2,38 @@ import { FileResponse } from '../types';
 
 const BASE_URL = 'http://127.0.0.1:3000';
 
-export const getTest = async () => {
-  await fetch(BASE_URL);
-  // return new Promise((resolve, reject) => {
-  //   setTimeout(() => resolve(res), 2000);
-  // });
+type Route = 'files' | 'root';
+
+const ROUTE: Record<Route, string> = {
+  files: '/files',
+  root: '/',
 };
 
-export const sendFile = async (file: File) => {
-  console.log('file: ', file);
-  const res = await fetch(`${BASE_URL}/file`, {
+const getRoute = (route: Route) => `${BASE_URL}${ROUTE[route]}`;
+
+export const getTest = async () => {
+  await fetch(getRoute('root'));
+};
+
+export const sendFile = async ({
+  file,
+  name,
+}: {
+  file: File;
+  name: string;
+}) => {
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append(name, file);
+  const res = await fetch(getRoute('files'), {
     method: 'POST',
-    body: file,
+    body: formData,
   });
 
   return (await res.json()) as FileResponse;
+};
+
+export const getFiles = async () => {
+  const res = await fetch(getRoute('files'));
+  return await res.json();
 };

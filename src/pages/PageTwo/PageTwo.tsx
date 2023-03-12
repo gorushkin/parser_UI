@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useExportContext } from '../../AppContext/AppContext';
-import { Table } from '../../components/Table';
+import { Table } from './Table';
 import { Menu } from '../../Menu';
 import style from './PageTwo.module.scss';
 

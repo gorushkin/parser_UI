@@ -8,7 +8,7 @@ import {
 } from 'react';
 import { read, write } from '../utils/db';
 import { sendFile } from '../services/api';
-import { Context, FileInfo, Page, Func, Transaction } from '../types';
+import { Context, FileInfo, Page, Func, Transaction, Sheet } from '../types';
 
 const AppContext = createContext<Context | null>(null);
 
@@ -23,61 +23,63 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
   const [isStorageEmpty, setIsStorageEmpty] = useState<boolean>(true);
   const [isDataSynced, setIsDataSynced] = useState(false);
 
-  useEffect(() => {
-    setIsStorageEmpty(!read());
-  }, []);
+  // useEffect(() => {
+  //   setIsStorageEmpty(!read());
+  // }, []);
 
-  const compareData = () => {
-    const savedData = read();
-    setIsDataSynced(JSON.stringify(savedData) === JSON.stringify(transactions));
-  };
+  // TODO: wrap functions in useCallback
 
-  useEffect(() => {
-    compareData();
-  }, [transactions]);
+  // const compareData = () => {
+  //   const savedData = read();
+  //   setIsDataSynced(JSON.stringify(savedData) === JSON.stringify(transactions));
+  // };
+
+  // useEffect(() => {
+  //   compareData();
+  // }, [transactions]);
 
   const updateTransactions = (func: Func) => {
     setTransactions(func);
   };
 
-  const writeTransactions = (data: Transaction[]) => {
-    const extendedTransactions: Transaction[] = data.map((item) => ({
-      ...item,
-      isReady: false,
-    }));
-    setTransactions(extendedTransactions);
-  };
+  // const writeTransactions = (data: Transaction[]) => {
+  //   const extendedTransactions: Transaction[] = data.map((item) => ({
+  //     ...item,
+  //     isReady: false,
+  //   }));
+  //   setTransactions(extendedTransactions);
+  // };
 
-  const handleStartClick = async () => {
+  const onStartClick = async (name: string) => {
     if (!fileInfo.content) return;
-    const { transactions } = await sendFile(fileInfo.content);
-    console.log('transactions: ', transactions);
-    writeTransactions(transactions);
-    setPage('second');
+    const { transactions } = await sendFile({ file: fileInfo.content, name });
+    const sheet: Sheet = { name, transactions };
+    // writeTransactions(transactions);
+    // setPage('second');
   };
 
-  const saveTransactions = () => {
-    write(transactions);
-    compareData();
-  };
+  // const saveTransactions = () => {
+  //   write(transactions);
+  //   compareData();
+  // };
 
-  const loadTransactions = () => {
-    const data = read();
-    if (!data) return;
-    writeTransactions(data);
-    setPage('second');
-  };
+  // const loadTransactions = () => {
+  //   const data = read();
+  //   if (!data) return;
+  //   writeTransactions(data);
+  //   setPage('second');
+  // };
 
   const context = useMemo(
     () => ({
       fileInfo,
       setFileInfo,
       page,
-      handleStartClick,
+      onStartClick,
       isStorageEmpty,
-      saveTransactions,
+      // saveTransactions,
       transactions,
-      loadTransactions,
+      // loadTransactions,
       updateTransactions,
       isDataSynced,
       setPage,
@@ -87,11 +89,12 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
       page,
       transactions,
       isStorageEmpty,
-      saveTransactions,
-      loadTransactions,
+      // saveTransactions,
+      // loadTransactions,
       updateTransactions,
       isDataSynced,
       setPage,
+      onStartClick,
     ]
   );
 
