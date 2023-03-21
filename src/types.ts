@@ -48,11 +48,8 @@ export type Context = {
   fileInfo: FileInfo;
   setFileInfo: React.Dispatch<React.SetStateAction<FileInfo>>;
   page: Page;
-  onStartClick: (name: string) => void;
-  isStorageEmpty: boolean;
   transactions: Transactions;
   updateTransactions: (func: Func) => void;
-  isDataSynced: boolean;
   setPage: React.Dispatch<React.SetStateAction<Page>>;
 };
 
@@ -62,4 +59,4 @@ export type FileResponse = { transactions: Transactions; payees: Payees };
 
 export type Sheet = { name: string; transactions: Transactions };
 
-export type Filenames = string[]
+export type Filenames = string[];

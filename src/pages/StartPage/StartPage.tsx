@@ -10,6 +10,7 @@ import { Files } from './Files';
 
 export const StartPage = () => {
   const { fileInfo } = useExportContext();
+  const [shouldUpdate, setShouldUpdate] = useState(false);
 
   const { handler, isLoading } = useFetch(getTest);
 
@@ -25,7 +26,10 @@ export const StartPage = () => {
     setIsFormVisible(true);
   };
 
-  const handleCloseFrom = () => setIsFormVisible(false);
+  const handleCloseFrom = () => {
+    setIsFormVisible(false);
+    setShouldUpdate(true);
+  };
 
   return (
     <>
@@ -41,10 +45,7 @@ export const StartPage = () => {
                   onClick={handleStartClick}
                   label="Start"
                 />
-                <Button
-                  onClick={handleStartClick}
-                  label="Check saved files"
-                />
+                <Button onClick={handleStartClick} label="Check saved files" />
                 <Button
                   label="Test Api"
                   isLoading={isLoading}
@@ -54,7 +55,12 @@ export const StartPage = () => {
             </>
           )}
           {isFormVisible && <FileForm onFormSave={handleCloseFrom} />}
-          <Files />
+          {!isFormVisible && (
+            <Files
+              shouldUpdate={shouldUpdate}
+              setShouldUpdate={setShouldUpdate}
+            />
+          )}
         </div>
       </div>
     </>

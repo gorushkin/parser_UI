@@ -3,12 +3,18 @@ import { Button } from '../../../components/Button';
 import { cn } from '../../../utils/utils';
 import styles from './FileForm.module.scss';
 import { useExportContext } from '../../../AppContext/AppContext';
+import { useFetch } from '../../../hooks/useFetch';
+import { sendFile } from '../../../services/api';
 
 export const FileForm = ({ onFormSave }: { onFormSave: () => void }) => {
   const [value, setValue] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const { onStartClick } = useExportContext();
+  const { handler, isLoading } = useFetch(sendFile, {
+    onSuccess: onFormSave,
+  });
+
+  const { fileInfo } = useExportContext();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsFormValid(!!event.target.value.trim());
@@ -17,8 +23,8 @@ export const FileForm = ({ onFormSave }: { onFormSave: () => void }) => {
 
   const handleSaveCLick = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
-    onStartClick(value);
-    onFormSave();
+    if (!fileInfo.content) return;
+    handler({ file: fileInfo.content, name: value });
   };
 
   return (
@@ -30,7 +36,11 @@ export const FileForm = ({ onFormSave }: { onFormSave: () => void }) => {
         value={value}
       />
       <div className={styles.buttonWrapper}>
-        <Button onClick={handleSaveCLick} disabled={!isFormValid}>
+        <Button
+          onClick={handleSaveCLick}
+          isLoading={isLoading}
+          disabled={!isFormValid}
+        >
           Save
         </Button>
         <Button>Cancel</Button>
