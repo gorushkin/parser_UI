@@ -1,6 +1,16 @@
 import { useCallback, useState } from 'react';
 
-export const useFetch = (request: Function) => {
+type Options = { onSuccess?: Function; onFail?: Function };
+
+type UseFetch = (
+  request: Function,
+  options?: Options
+) => { isLoading: boolean; data: any; error: any; handler: Function };
+
+export const useFetch: UseFetch = (
+  request,
+  { onSuccess, onFail } = { onSuccess: () => {}, onFail: () => {} }
+) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<any>(null);
@@ -11,9 +21,11 @@ export const useFetch = (request: Function) => {
       const response = await request(params);
       if (!response?.data) return;
       setData(response.data);
+      if (onSuccess) onSuccess(response.data);
     } catch (error) {
       console.log('error: ', error);
       setError(error as Error);
+      if (onFail) onFail();
     } finally {
       setIsLoading(false);
     }
