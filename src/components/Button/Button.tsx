@@ -35,10 +35,13 @@ export const Button = ({
         className,
         style.button,
         colorMapping[color],
-        isLoading && style.buttonLoading
+        isLoading && style.buttonIsLoading
       )}
     >
-      {isLoading ? <div className={style.loader} /> : label || children}
+      <>
+        {label || children}
+        {isLoading && <div className={style.loader} />}
+      </>
     </button>
   );
 };
