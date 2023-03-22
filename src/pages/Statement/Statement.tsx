@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Table } from './Table';
 import { Menu } from '../../Menu';
 import style from './Statement.module.scss';

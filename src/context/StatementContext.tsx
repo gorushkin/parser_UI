@@ -27,6 +27,8 @@ type Context = {
 
 const StatementContext = createContext<Context | null>(null);
 
+type Mode = 'get' | 'compare' | 'update';
+
 const StatementContextProvider = ({ children }: { children: ReactElement }) => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isDataSynced, setIsDateSynced] = useState<boolean>(false);
@@ -74,7 +76,7 @@ const useStatementContext = () => {
   } = context;
 
   const [shouldUpdate, setShouldUpdate] = useState(false);
-  const isRewriteEnabled = useRef<boolean>(false);
+  const mode = useRef<Mode>('get');
 
   const { statementName } = useParams();
 
@@ -100,16 +102,26 @@ const useStatementContext = () => {
     setIsDateSynced(true);
   }, []);
 
+  const onCompareHandler = useCallback((statement: Transaction[]) => {
+    if (!statementName) return;
+    const dBData = db.readData(statementName);
+    setIsDateSynced(dBData ? compareStatements(statement, dBData) : false);
+  }, []);
+
+  const actionMappimg: Record<Mode, (statement: Transaction[]) => void> = {
+    get: onGetStatement,
+    compare: onCompareHandler,
+    update: onForceUpdateStatement,
+  };
+
   const [{ isLoading, error }, getStatementHandler] = useFetch(getStatement, {
     onSuccess: useCallback(
       (statement: Statement) => {
-        const handler = isRewriteEnabled.current
-          ? onForceUpdateStatement
-          : onGetStatement;
-        isRewriteEnabled.current = false;
+        const handler = actionMappimg[mode.current];
         handler(statement);
+        mode.current = 'get';
       },
-      [isRewriteEnabled]
+      [mode]
     ),
   });
 
@@ -142,11 +154,17 @@ const useStatementContext = () => {
   );
 
   const handleSaveClick = () => {
+    mode.current = 'get';
     updateStatementHandler({ name: statementName, statement: transactions });
   };
 
   const handleLoadClick = () => {
-    isRewriteEnabled.current = true;
+    mode.current = 'update';
+    getStatementHandler(statementName);
+  };
+
+  const handleCompareData = () => {
+    mode.current = 'compare';
     getStatementHandler(statementName);
   };
 
@@ -160,6 +178,7 @@ const useStatementContext = () => {
     tableState,
     handleSaveClick,
     handleLoadClick,
+    handleCompareData,
   };
 };
 
