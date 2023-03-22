@@ -5,6 +5,7 @@ import {
   useMemo,
   useContext,
   useEffect,
+  useCallback,
 } from 'react';
 import { Transaction } from 'parser';
 import { useFetch } from '../hooks/useFetch';
@@ -41,6 +42,9 @@ const useStatementContext = () => {
   const context = useContext(StatementContext);
 
   if (!context) throw new Error('Something wrong wih your context');
+  const { setTransactions, transactions } = context;
+  const [shouldUpdate, setShouldUpdate] = useState(false);
+
   const { statementName } = useParams();
 
   const { handler, isLoading, error } = useFetch(getFile, {
@@ -52,6 +56,12 @@ const useStatementContext = () => {
   });
 
   useEffect(() => {
+    if (!statementName || !shouldUpdate) return;
+    db.writeData(transactions, statementName);
+    setShouldUpdate(false);
+  }, [transactions, shouldUpdate]);
+
+  useEffect(() => {
     if (!statementName) return;
     const savedData = db.readData(statementName);
     if (!savedData?.length) {
@@ -61,9 +71,17 @@ const useStatementContext = () => {
     setTransactions(savedData || []);
   }, []);
 
-  const { setTransactions, transactions } = context;
+  const updateTransaction = useCallback(
+    (id: string, updatedTransaction: Transaction) => {
+      setTransactions((state) =>
+        state.map((item) => (item.id === id ? updatedTransaction : item))
+      );
+      setShouldUpdate(true);
+    },
+    []
+  );
 
-  return { isLoading, transactions, error };
+  return { isLoading, transactions, error, updateTransaction };
 };
 
 export { useStatementContext, StatementContextProvider };

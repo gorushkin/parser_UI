@@ -4,10 +4,13 @@ import { useEffect, useState } from 'react';
 import { RowMode } from '../../../types';
 import { columns } from '../../../utils/constants';
 import { cn, convertValue, propertyTypesMapping } from '../../../utils/utils';
-import { useExportContext } from '../../../AppContext/AppContext';
+import { useStatementContext } from '../../../AppContext/StatementContext';
 
 const DataColumn = ({ transaction }: { transaction: Transaction }) => (
-  <td colSpan={7} onClick={() => navigator.clipboard.writeText(transaction.data)}>
+  <td
+    colSpan={7}
+    onClick={() => navigator.clipboard.writeText(transaction.data)}
+  >
     {transaction.data}
   </td>
 );
@@ -52,7 +55,7 @@ const TableRow = ({
   transaction: Transaction;
   tableState: boolean;
 }) => {
-  // const { updateTransactions } = useExportContext();
+  const { updateTransaction } = useStatementContext();
 
   const [rowMode, setRowMode] = useState<RowMode>('allColumns');
 
@@ -65,10 +68,11 @@ const TableRow = ({
   };
 
   const handleChange = () => {
-    console.log(transaction);
-    // updateTransactions((state) =>
-    //   state.map((item) => (item.id === transaction.id ? { ...item, isClear: !item.isClear } : item))
-    // );
+    const updatedTransaction: Transaction = {
+      ...transaction,
+      isClear: !transaction.isClear,
+    };
+    updateTransaction(transaction.id, updatedTransaction);
   };
 
   return (
@@ -76,7 +80,10 @@ const TableRow = ({
       {mapping[rowMode]({ transaction })}
       <td onClick={handleModeClick}>Show</td>
       <td
-        className={cn(style.checkbox, transaction.isClear && style.checkboxIsClear)}
+        className={cn(
+          style.checkbox,
+          transaction.isClear && style.checkboxIsClear
+        )}
         onClick={handleChange}
       />
     </tr>
