@@ -1,6 +1,6 @@
 import { AppContextProvider } from '../AppContext/AppContext';
 import { StartPage } from '../pages/StartPage';
-import { StatementProvider } from '../pages/Transactions';
+import { StatementProvider } from '../pages/Statement';
 import style from './App.module.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ErrorPage } from '../pages/ErrorPage';
