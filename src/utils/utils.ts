@@ -1,9 +1,10 @@
 import * as dayjs from 'dayjs';
-import { Column, PropertyType } from '../types';
+import { Column, PropertyType, Statement } from '../types';
 
 type ClassNames = (string | true | false)[];
 
-export const cn = (...classnames: ClassNames) => classnames.filter((item) => !!item).join(' ');
+export const cn = (...classnames: ClassNames) =>
+  classnames.filter((item) => !!item).join(' ');
 
 export const propertyTypesMapping: Record<Column, PropertyType> = {
   amount: 'number',
@@ -17,7 +18,8 @@ export const propertyTypesMapping: Record<Column, PropertyType> = {
   isClear: 'boolean',
 };
 
-const stringToDate = (value: string): string => dayjs(value).format('DD.MM.YYYY');
+const stringToDate = (value: string): string =>
+  dayjs(value).format('DD.MM.YYYY');
 
 const numberToMoney = (value: number, decimalPlaces = 2) =>
   `${value?.toLocaleString(undefined, {
@@ -50,3 +52,6 @@ export const convertValue = (
 
   return mapping[type](value.toString());
 };
+
+export const compareStatements = (s1: Statement, s2: Statement): boolean =>
+  JSON.stringify(s1) === JSON.stringify(s2);

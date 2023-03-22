@@ -1,4 +1,4 @@
-import { AppContextProvider } from '../AppContext/AppContext';
+import { AppContextProvider } from '../context/AppContext';
 import { StartPage } from '../pages/StartPage';
 import { StatementProvider } from '../pages/Statement';
 import style from './App.module.scss';

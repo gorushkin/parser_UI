@@ -6,14 +6,10 @@ import style from './Statement.module.scss';
 import {
   StatementContextProvider,
   useStatementContext,
-} from '../../AppContext/StatementContext';
+} from '../../context/StatementContext';
 
 const Statement = () => {
-  const [tableState, setTableState] = useState<boolean>(false);
-
-  const { error, isLoading, transactions } = useStatementContext();
-
-  const handleResetClick = () => setTableState((state) => !state);
+  const { error, isLoading } = useStatementContext();
 
   if (isLoading) return <h1>Loading....</h1>;
 
@@ -24,9 +20,9 @@ const Statement = () => {
       ) : (
         <>
           <div className={style.menuWrapper}>
-            <Menu onResetClick={handleResetClick} />
+            <Menu />
           </div>
-          <Table tableState={tableState} transactions={transactions} />
+          <Table />
         </>
       )}
     </div>

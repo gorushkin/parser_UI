@@ -1,6 +1,6 @@
 import { cn } from '../../utils/utils';
 import style from './Button.module.scss';
-
+import { ReactElement } from 'react';
 type ButtonType = 'green' | 'blue' | 'red' | 'orange';
 
 export const Button = ({
@@ -17,7 +17,7 @@ export const Button = ({
   className?: string;
   label?: string;
   disabled?: boolean;
-  children?: string;
+  children?: string | ReactElement;
   isLoading?: boolean;
 }) => {
   const colorMapping: Record<ButtonType, string> = {

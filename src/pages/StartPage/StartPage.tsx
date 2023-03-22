@@ -1,4 +1,4 @@
-import { useExportContext } from '../../AppContext/AppContext';
+import { useExportContext } from '../../context/AppContext';
 import { Button } from '../../components/Button/Button';
 import { getTest } from '../../services/api';
 import style from './StartPage.module.scss';
@@ -12,9 +12,9 @@ export const StartPage = () => {
   const { fileInfo } = useExportContext();
   const [shouldUpdate, setShouldUpdate] = useState(false);
 
-  const { handler, isLoading } = useFetch(getTest);
+  const [{ isLoading }, getTestHandler] = useFetch(getTest);
 
-  const handleTestClick = () => handler();
+  const handleTestClick = () => getTestHandler();
 
   const [isFormVisible, setIsFormVisible] = useState(false);
 

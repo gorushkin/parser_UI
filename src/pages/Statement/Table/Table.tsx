@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { RowMode } from '../../../types';
 import { columns } from '../../../utils/constants';
 import { cn, convertValue, propertyTypesMapping } from '../../../utils/utils';
-import { useStatementContext } from '../../../AppContext/StatementContext';
+import { useStatementContext } from '../../../context/StatementContext';
 
 const DataColumn = ({ transaction }: { transaction: Transaction }) => (
   <td
@@ -48,14 +48,8 @@ const TableHeader = () => (
   </thead>
 );
 
-const TableRow = ({
-  transaction,
-  tableState,
-}: {
-  transaction: Transaction;
-  tableState: boolean;
-}) => {
-  const { updateTransaction } = useStatementContext();
+const TableRow = ({ transaction }: { transaction: Transaction }) => {
+  const { updateTransaction, tableState } = useStatementContext();
 
   const [rowMode, setRowMode] = useState<RowMode>('allColumns');
 
@@ -63,9 +57,8 @@ const TableRow = ({
     setRowMode('allColumns');
   }, [tableState]);
 
-  const handleModeClick = () => {
+  const handleModeClick = () =>
     setRowMode((mode) => (mode === 'allColumns' ? 'dataColumn' : 'allColumns'));
-  };
 
   const handleChange = () => {
     const updatedTransaction: Transaction = {
@@ -90,29 +83,21 @@ const TableRow = ({
   );
 };
 
-const TableBody = ({
-  transactions,
-  tableState,
-}: {
-  tableState: boolean;
-  transactions: Transaction[];
-}) => (
-  <tbody>
-    {transactions.map((transaction, i) => (
-      <TableRow tableState={tableState} key={i} transaction={transaction} />
-    ))}
-  </tbody>
-);
+const TableBody = () => {
+  const { transactions } = useStatementContext();
 
-export const Table = ({
-  transactions,
-  tableState,
-}: {
-  tableState: boolean;
-  transactions: Transaction[];
-}) => (
+  return (
+    <tbody>
+      {transactions.map((transaction, i) => (
+        <TableRow key={i} transaction={transaction} />
+      ))}
+    </tbody>
+  );
+};
+
+export const Table = () => (
   <table className={style.table}>
     <TableHeader />
-    <TableBody tableState={tableState} transactions={transactions} />
+    <TableBody />
   </table>
 );

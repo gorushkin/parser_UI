@@ -1,12 +1,13 @@
-import { FileResponse } from '../types';
+import { FileResponse, Statement } from '../types';
 
 const BASE_URL = 'http://127.0.0.1:3000';
 
-type Route = 'files' | 'root';
+type Route = 'files' | 'root' | 'statement';
 
 const ROUTE: Record<Route, string> = {
   files: '/files',
   root: '/',
+  statement: '/statement',
 };
 
 const getRoute = (route: Route, id?: string) =>
@@ -41,5 +42,19 @@ export const getFiles = async () => {
 
 export const getFile = async (filename: string) => {
   const res = await fetch(getRoute('files', filename));
+  return await res.json();
+};
+
+export const updateStatement = async ({
+  name,
+  statement,
+}: {
+  name: string;
+  statement: Statement;
+}) => {
+  const res = await fetch(getRoute('statement'), {
+    method: 'POST',
+    body: JSON.stringify({ name, statement }),
+  });
   return await res.json();
 };

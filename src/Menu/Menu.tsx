@@ -1,45 +1,50 @@
 import { cn } from '../utils/utils';
 import style from './Menu.module.scss';
-import { useExportContext } from '../AppContext/AppContext';
+import { useStatementContext } from '../context/StatementContext';
 import { Button } from '../components/Button/Button';
+import { Link } from 'react-router-dom';
+import { APP_ROUTES } from '../routes';
 
-export const Menu = ({ onResetClick }: { onResetClick: () => void }) => {
-  const { saveTransactions, isDataSynced, setPage } = useExportContext();
+export const Menu = () => {
+  const { isDataSynced, handleResetClick, handleSaveClick, handleLoadClick } =
+    useStatementContext();
 
-  const message = isDataSynced ? 'The date is synced' : 'The date is not synced';
-
-  const handleSaveClick = () => saveTransactions();
+  const message = isDataSynced
+    ? 'The date is synced'
+    : 'The date is not synced';
 
   return (
     <div className={style.wrapper}>
-      <div className={cn(style.info, !isDataSynced && style.infoWarning)}>{message}</div>
+      <div className={cn(style.info, !isDataSynced && style.infoWarning)}>
+        {message}
+      </div>
       <div className={cn(style.controls, style.row)}>
         <div className={style.buttonWrapper}>
-          <Button color='orange' onClick={onResetClick}>
+          <Button color="orange" onClick={handleResetClick}>
             Reset
           </Button>
-          <Button color='orange' onClick={() => setPage('first')}>
-            Back
-          </Button>
+          <Link className={style.buttonLink} to={APP_ROUTES.ROOT}>
+            <Button color="orange">Back</Button>
+          </Link>
         </div>
         <div className={style.buttonWrapper}>
-          <Button onClick={onResetClick} color='blue'>
-            Load from LS
+          <Button onClick={handleLoadClick} color="blue">
+            Load from disk
           </Button>
-          <Button onClick={handleSaveClick} color='green'>
-            Save to LS
+          <Button onClick={handleSaveClick} color="green">
+            Save to disk
           </Button>
         </div>
       </div>
       <div className={style.row}>
-        <div className={cn(style.buttonWrapper, style.buttonWrapperRight)}>
+        {/* <div className={cn(style.buttonWrapper, style.buttonWrapperRight)}>
           <Button onClick={onResetClick} color='blue'>
             Load from disk
           </Button>
           <Button onClick={handleSaveClick} color='green'>
             Save to disk
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
