@@ -1,6 +1,6 @@
 import { AppContextProvider } from '../AppContext/AppContext';
 import { StartPage } from '../pages/StartPage';
-import { Transactions } from '../pages/Transactions';
+import { StatementProvider } from '../pages/Transactions';
 import style from './App.module.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ErrorPage } from '../pages/ErrorPage';
@@ -14,7 +14,7 @@ const router = createBrowserRouter([
   },
   {
     path: APP_ROUTES.STATEMENTS,
-    element: <Transactions />,
+    element: <StatementProvider />,
     errorElement: <ErrorPage />,
   },
 ]);
