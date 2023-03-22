@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '../../../components/Button';
 import { cn } from '../../../utils/utils';
 import styles from './FileForm.module.scss';
-import { useExportContext } from '../../../AppContext/AppContext';
+import { useExportContext } from '../../../context/AppContext';
 import { useFetch } from '../../../hooks/useFetch';
 import { sendFile } from '../../../services/api';
 
@@ -10,7 +10,7 @@ export const FileForm = ({ onFormSave }: { onFormSave: () => void }) => {
   const [value, setValue] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const { handler, isLoading } = useFetch(sendFile, {
+  const [{ isLoading }, sendFileHandler] = useFetch(sendFile, {
     onSuccess: onFormSave,
   });
 
@@ -24,7 +24,7 @@ export const FileForm = ({ onFormSave }: { onFormSave: () => void }) => {
   const handleSaveCLick = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     if (!fileInfo.content) return;
-    handler({ file: fileInfo.content, name: value });
+    sendFileHandler({ file: fileInfo.content, name: value });
   };
 
   return (

@@ -12,7 +12,7 @@ export type Transaction = {
   isClear: boolean;
 };
 
-export type Transactions = Transaction[];
+export type Statement = Transaction[];
 
 export type Payee = { id: string; name: string; displayName: string };
 export type Payees = Record<string, Payee>;
@@ -30,7 +30,7 @@ export type Column =
   | 'data'
   | 'isClear';
 
-export type TransactionGroup = Record<string, Transactions>;
+export type TransactionGroup = Record<string, Statement>;
 
 export type Value = string | Date | number | boolean;
 export type PropertyType = 'number' | 'date' | 'string' | 'boolean';
@@ -51,10 +51,10 @@ export type Context = {
   setPage: React.Dispatch<React.SetStateAction<Page>>;
 };
 
-export type Func = (transactions: Transactions) => Transactions;
+export type Func = (transactions: Statement) => Statement;
 
-export type FileResponse = { transactions: Transactions; payees: Payees };
+export type FileResponse = { transactions: Statement; payees: Payees };
 
-export type Sheet = { name: string; transactions: Transactions };
+export type Sheet = { name: string; transactions: Statement };
 
 export type Filenames = string[];

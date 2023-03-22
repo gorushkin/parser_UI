@@ -2,10 +2,12 @@ import { useCallback, useState } from 'react';
 
 type Options = { onSuccess?: Function; onFail?: Function };
 
+type Result = { isLoading: boolean; data: any; error: any };
+
 type UseFetch = (
   request: Function,
   options?: Options
-) => { isLoading: boolean; data: any; error: any; handler: Function };
+) => [result: Result, handler: Function];
 
 export const useFetch: UseFetch = (
   request,
@@ -37,5 +39,5 @@ export const useFetch: UseFetch = (
     fetchData(params);
   }, []);
 
-  return { isLoading, data, error, handler };
+  return [{ isLoading, data, error }, handler];
 };

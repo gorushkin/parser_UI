@@ -1,4 +1,4 @@
-import { useExportContext } from '../../../AppContext/AppContext';
+import { useExportContext } from '../../../context/AppContext';
 import style from './DropZone.module.scss';
 import { cn } from '../../../utils/utils';
 import React, { useState } from 'react';
