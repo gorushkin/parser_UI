@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useCallback,
+  useRef,
 } from 'react';
 import { Transaction } from 'parser';
 import { useFetch } from '../hooks/useFetch';
@@ -13,6 +14,7 @@ import { getStatement, updateStatement } from '../services/api';
 import { db } from '../utils/db';
 import { useParams } from 'react-router-dom';
 import { compareStatements } from '../utils/utils';
+import { Statement } from '../types';
 
 type Context = {
   transactions: Transaction[];
@@ -72,10 +74,11 @@ const useStatementContext = () => {
   } = context;
 
   const [shouldUpdate, setShouldUpdate] = useState(false);
+  const isRewriteEnabled = useRef<boolean>(false);
 
   const { statementName } = useParams();
 
-  const onGetFileSuccess = useCallback((syncedData: Transaction[]) => {
+  const onGetStatement = useCallback((syncedData: Transaction[]) => {
     if (!statementName) return;
     const dBData = db.readData(statementName);
     if (!dBData) {
@@ -90,8 +93,24 @@ const useStatementContext = () => {
     setIsDateSynced(isDateEqial);
   }, []);
 
-  const [{ isLoading, error }, getFileHandler] = useFetch(getStatement, {
-    onSuccess: onGetFileSuccess,
+  const onForceUpdateStatement = useCallback((statement: Transaction[]) => {
+    if (!statementName) return;
+    db.writeData(statement, statementName);
+    setTransactions(statement);
+    setIsDateSynced(true);
+  }, []);
+
+  const [{ isLoading, error }, getStatementHandler] = useFetch(getStatement, {
+    onSuccess: useCallback(
+      (statement: Statement) => {
+        const handler = isRewriteEnabled.current
+          ? onForceUpdateStatement
+          : onGetStatement;
+        isRewriteEnabled.current = false;
+        handler(statement);
+      },
+      [isRewriteEnabled]
+    ),
   });
 
   const [, updateStatementHandler] = useFetch(updateStatement, {
@@ -108,7 +127,7 @@ const useStatementContext = () => {
   }, [transactions, shouldUpdate]);
 
   useEffect(() => {
-    getFileHandler(statementName);
+    getStatementHandler(statementName);
   }, []);
 
   const updateTransaction = useCallback(
@@ -127,7 +146,8 @@ const useStatementContext = () => {
   };
 
   const handleLoadClick = () => {
-    console.log('handleLoadClick');
+    isRewriteEnabled.current = true;
+    getStatementHandler(statementName);
   };
 
   return {

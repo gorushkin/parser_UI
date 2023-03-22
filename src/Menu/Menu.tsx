@@ -10,8 +10,8 @@ export const Menu = () => {
     useStatementContext();
 
   const message = isDataSynced
-    ? 'The date is synced'
-    : 'The date is not synced';
+    ? 'The data is synced'
+    : 'The data is not synced';
 
   return (
     <div className={style.wrapper}>
