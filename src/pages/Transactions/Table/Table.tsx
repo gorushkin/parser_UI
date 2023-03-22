@@ -1,10 +1,10 @@
 import { Transaction } from 'parser';
 import style from './Table.module.scss';
 import { useEffect, useState } from 'react';
-import { RowMode } from '../../types';
-import { columns } from '../../utils/constants';
-import { cn, convertValue, propertyTypesMapping } from '../../utils/utils';
-import { useExportContext } from '../../AppContext/AppContext';
+import { RowMode } from '../../../types';
+import { columns } from '../../../utils/constants';
+import { cn, convertValue, propertyTypesMapping } from '../../../utils/utils';
+import { useExportContext } from '../../../AppContext/AppContext';
 
 const DataColumn = ({ transaction }: { transaction: Transaction }) => (
   <td colSpan={7} onClick={() => navigator.clipboard.writeText(transaction.data)}>

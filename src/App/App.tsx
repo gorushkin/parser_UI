@@ -1,22 +1,30 @@
-import { AppContextProvider, useExportContext } from '../AppContext/AppContext';
-import { PageOne } from '../pages/PageOne';
-import { PageTwo } from '../pages/PageTwo';
-import { Page } from '../types';
+import { AppContextProvider } from '../AppContext/AppContext';
+import { StartPage } from '../pages/StartPage';
+import { Transactions } from '../pages/Transactions';
 import style from './App.module.scss';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ErrorPage } from '../pages/ErrorPage';
+import { APP_ROUTES } from '../routes';
 
-const pageMapping: Record<Page, JSX.Element> = {
-  first: <PageOne />,
-  second: <PageTwo />,
-};
+const router = createBrowserRouter([
+  {
+    path: APP_ROUTES.ROOT,
+    element: <StartPage />,
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: APP_ROUTES.STATEMENTS,
+    element: <Transactions />,
+    errorElement: <ErrorPage />,
+  },
+]);
 
-function App() {
-  const { page } = useExportContext();
-
-  return <div className={style.container}>{pageMapping[page]}</div>;
+export default function App() {
+  return (
+    <AppContextProvider>
+      <div className={style.container}>
+        <RouterProvider router={router} />
+      </div>
+    </AppContextProvider>
+  );
 }
-
-export default () => (
-  <AppContextProvider>
-    <App />
-  </AppContextProvider>
-);

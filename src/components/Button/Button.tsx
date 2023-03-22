@@ -1,4 +1,4 @@
-import { cn } from '../utils/utils';
+import { cn } from '../../utils/utils';
 import style from './Button.module.scss';
 
 type ButtonType = 'green' | 'blue' | 'red' | 'orange';
@@ -13,7 +13,7 @@ export const Button = ({
   isLoading = false,
 }: {
   color?: ButtonType;
-  onClick?: () => void;
+  onClick?: (e) => void;
   className?: string;
   label?: string;
   disabled?: boolean;
@@ -35,10 +35,13 @@ export const Button = ({
         className,
         style.button,
         colorMapping[color],
-        isLoading && style.buttonLoading
+        isLoading && style.buttonIsLoading
       )}
     >
-      {isLoading ? <div className={style.loader} /> : label || children}
+      <>
+        {label || children}
+        {isLoading && <div className={style.loader} />}
+      </>
     </button>
   );
 };

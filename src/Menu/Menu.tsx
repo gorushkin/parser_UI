@@ -1,7 +1,7 @@
 import { cn } from '../utils/utils';
 import style from './Menu.module.scss';
 import { useExportContext } from '../AppContext/AppContext';
-import { Button } from '../Button/Button';
+import { Button } from '../components/Button/Button';
 
 export const Menu = ({ onResetClick }: { onResetClick: () => void }) => {
   const { saveTransactions, isDataSynced, setPage } = useExportContext();
