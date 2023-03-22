@@ -1,19 +1,20 @@
 import { AppContextProvider } from '../AppContext/AppContext';
 import { StartPage } from '../pages/StartPage';
-import { PageTwo } from '../pages/PageTwo';
+import { Transactions } from '../pages/Transactions';
 import style from './App.module.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ErrorPage } from '../pages/ErrorPage';
+import { APP_ROUTES } from '../routes';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: APP_ROUTES.ROOT,
     element: <StartPage />,
     errorElement: <ErrorPage />,
   },
   {
-    path: '/transactions',
-    element: <PageTwo />,
+    path: APP_ROUTES.STATEMENTS,
+    element: <Transactions />,
     errorElement: <ErrorPage />,
   },
 ]);

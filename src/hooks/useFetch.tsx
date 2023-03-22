@@ -19,12 +19,14 @@ export const useFetch: UseFetch = (
     setIsLoading(true);
     try {
       const response = await request(params);
+      if (response.error) throw new Error(response.error);
       if (!response?.data) return;
       setData(response.data);
       if (onSuccess) onSuccess(response.data);
     } catch (error) {
-      console.log('error: ', error);
-      setError(error as Error);
+      const errorMessage =
+        error instanceof Error ? error.message : 'Something went wrong';
+      setError(errorMessage);
       if (onFail) onFail();
     } finally {
       setIsLoading(false);

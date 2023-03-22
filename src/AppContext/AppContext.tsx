@@ -16,28 +16,15 @@ const AppContextProvider = ({ children }: { children: ReactElement }) => {
     content: null,
   });
   const [page, setPage] = useState<Page>('first');
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-
-  const updateTransactions = (func: Func) => {
-    setTransactions(func);
-  };
 
   const context = useMemo(
     () => ({
       fileInfo,
       setFileInfo,
       page,
-      transactions,
-      updateTransactions,
       setPage,
     }),
-    [
-      fileInfo,
-      page,
-      transactions,
-      updateTransactions,
-      setPage,
-    ]
+    [fileInfo, page, setPage]
   );
 
   return <AppContext.Provider value={context}>{children}</AppContext.Provider>;

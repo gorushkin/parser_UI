@@ -48,8 +48,6 @@ export type Context = {
   fileInfo: FileInfo;
   setFileInfo: React.Dispatch<React.SetStateAction<FileInfo>>;
   page: Page;
-  transactions: Transactions;
-  updateTransactions: (func: Func) => void;
   setPage: React.Dispatch<React.SetStateAction<Page>>;
 };
 

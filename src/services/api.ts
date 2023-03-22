@@ -9,7 +9,8 @@ const ROUTE: Record<Route, string> = {
   root: '/',
 };
 
-const getRoute = (route: Route) => `${BASE_URL}${ROUTE[route]}`;
+const getRoute = (route: Route, id?: string) =>
+  id ? `${BASE_URL}${ROUTE[route]}/${id}` : `${BASE_URL}${ROUTE[route]}`;
 
 export const getTest = async () => {
   await fetch(getRoute('root'));
@@ -35,5 +36,10 @@ export const sendFile = async ({
 
 export const getFiles = async () => {
   const res = await fetch(getRoute('files'));
+  return await res.json();
+};
+
+export const getFile = async (filename: string) => {
+  const res = await fetch(getRoute('files', filename));
   return await res.json();
 };

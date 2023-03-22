@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useFetch } from '../../../hooks/useFetch';
+import { getStatementUrl, ROUTES } from '../../../routes';
 import { getFiles } from '../../../services/api';
 import { Filenames } from '../../../types';
 import styles from './Files.module.scss';
@@ -34,7 +36,7 @@ export const Files = ({
       {filenames.map((filename) => {
         return (
           <li className={styles.item} key={filename}>
-            {filename}
+            <Link to={getStatementUrl(filename)}>{filename}</Link>
           </li>
         );
       })}
