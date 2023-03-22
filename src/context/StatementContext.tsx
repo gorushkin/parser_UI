@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { Transaction } from 'parser';
 import { useFetch } from '../hooks/useFetch';
-import { getFile, updateStatement } from '../services/api';
+import { getStatement, updateStatement } from '../services/api';
 import { db } from '../utils/db';
 import { useParams } from 'react-router-dom';
 import { compareStatements } from '../utils/utils';
@@ -90,7 +90,7 @@ const useStatementContext = () => {
     setIsDateSynced(isDateEqial);
   }, []);
 
-  const [{ isLoading, error }, getFileHandler] = useFetch(getFile, {
+  const [{ isLoading, error }, getFileHandler] = useFetch(getStatement, {
     onSuccess: onGetFileSuccess,
   });
 

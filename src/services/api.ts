@@ -2,12 +2,12 @@ import { FileResponse, Statement } from '../types';
 
 const BASE_URL = 'http://127.0.0.1:3000';
 
-type Route = 'files' | 'root' | 'statement';
+type Route = 'files' | 'root' | 'statements';
 
 const ROUTE: Record<Route, string> = {
   files: '/files',
   root: '/',
-  statement: '/statement',
+  statements: '/statements',
 };
 
 const getRoute = (route: Route, id?: string) =>
@@ -17,7 +17,7 @@ export const getTest = async () => {
   await fetch(getRoute('root'));
 };
 
-export const sendFile = async ({
+export const uploadFile = async ({
   file,
   name,
 }: {
@@ -35,13 +35,13 @@ export const sendFile = async ({
   return (await res.json()) as FileResponse;
 };
 
-export const getFiles = async () => {
-  const res = await fetch(getRoute('files'));
+export const getStatements = async () => {
+  const res = await fetch(getRoute('statements'));
   return await res.json();
 };
 
-export const getFile = async (filename: string) => {
-  const res = await fetch(getRoute('files', filename));
+export const getStatement = async (name: string) => {
+  const res = await fetch(getRoute('statements', name));
   return await res.json();
 };
 
@@ -52,7 +52,7 @@ export const updateStatement = async ({
   name: string;
   statement: Statement;
 }) => {
-  const res = await fetch(getRoute('statement'), {
+  const res = await fetch(getRoute('statements'), {
     method: 'POST',
     body: JSON.stringify({ name, statement }),
   });

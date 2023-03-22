@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useFetch } from '../../../hooks/useFetch';
 import { getStatementUrl } from '../../../routes';
-import { getFiles } from '../../../services/api';
+import { getStatements } from '../../../services/api';
 import { Filenames } from '../../../types';
 import styles from './Files.module.scss';
 
@@ -13,7 +13,7 @@ export const Files = ({
   shouldUpdate: boolean;
   setShouldUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const [{ isLoading, data }, getFilesHandler] = useFetch(getFiles);
+  const [{ isLoading, data }, getFilesHandler] = useFetch(getStatements);
 
   const filenames = data as Filenames;
 
