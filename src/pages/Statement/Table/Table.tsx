@@ -52,7 +52,7 @@ const TableRow = ({
   transaction: Transaction;
   tableState: boolean;
 }) => {
-  const { updateTransactions } = useExportContext();
+  // const { updateTransactions } = useExportContext();
 
   const [rowMode, setRowMode] = useState<RowMode>('allColumns');
 
@@ -65,9 +65,10 @@ const TableRow = ({
   };
 
   const handleChange = () => {
-    updateTransactions((state) =>
-      state.map((item) => (item.id === transaction.id ? { ...item, isClear: !item.isClear } : item))
-    );
+    console.log(transaction);
+    // updateTransactions((state) =>
+    //   state.map((item) => (item.id === transaction.id ? { ...item, isClear: !item.isClear } : item))
+    // );
   };
 
   return (

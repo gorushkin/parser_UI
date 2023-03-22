@@ -5,7 +5,7 @@ import {
   useMemo,
   useContext,
 } from 'react';
-import { Context, FileInfo, Page, Func, Transaction } from '../types';
+import { Context, FileInfo, Page } from '../types';
 
 const AppContext = createContext<Context | null>(null);
 

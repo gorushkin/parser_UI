@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { Table } from './Table';
 import { Menu } from '../../Menu';
-import style from './Transactions.module.scss';
+import style from './Statement.module.scss';
 
 import {
   StatementContextProvider,
   useStatementContext,
 } from '../../AppContext/StatementContext';
 
-const Transactions = () => {
+const Statement = () => {
   const [tableState, setTableState] = useState<boolean>(false);
 
   const { error, isLoading, transactions } = useStatementContext();
@@ -35,6 +35,6 @@ const Transactions = () => {
 
 export const StatementProvider = () => (
   <StatementContextProvider>
-    <Transactions />
+    <Statement />
   </StatementContextProvider>
 );
