@@ -7,7 +7,7 @@ import { useStatementContext } from '../../../context/StatementContext';
 
 const DataColumn = ({ transaction }: { transaction: Transaction }) => (
   <td
-    colSpan={7}
+    colSpan={9}
     onClick={() => navigator.clipboard.writeText(transaction.data)}
   >
     {transaction.data}
