@@ -8,21 +8,26 @@ import {
   useCallback,
   useRef,
 } from 'react';
-import { Transaction } from 'parser';
 import { useFetch } from '../hooks/useFetch';
 import { getStatement, updateStatement } from '../services/api';
 import { db } from '../utils/db';
 import { useParams } from 'react-router-dom';
 import { compareStatements } from '../utils/utils';
-import { Statement } from '../types';
+import { Statement, Transaction } from '../types';
 
 type Context = {
-  transactions: Transaction[];
+  transactions: Statement;
   isDataSynced: boolean;
-  setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
+  setTransactions: React.Dispatch<React.SetStateAction<Statement>>;
   setIsDateSynced: React.Dispatch<React.SetStateAction<boolean>>;
   handleResetClick: () => void;
   tableState: boolean;
+  isLoading: boolean;
+  error: any;
+  updateTransaction: (id: string, updatedTransaction: Transaction) => void;
+  handleSaveClick: () => void;
+  handleLoadClick: () => void;
+  handleCompareData: () => void;
 };
 
 const StatementContext = createContext<Context | null>(null);
@@ -30,57 +35,13 @@ const StatementContext = createContext<Context | null>(null);
 type Mode = 'get' | 'compare' | 'update';
 
 const StatementContextProvider = ({ children }: { children: ReactElement }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [transactions, setTransactions] = useState<Statement>([]);
   const [isDataSynced, setIsDateSynced] = useState<boolean>(false);
   const [tableState, setTableState] = useState<boolean>(false);
 
-  const handleResetClick = () => setTableState((state) => !state);
-
-  const context = useMemo(
-    () => ({
-      transactions,
-      setTransactions,
-      isDataSynced,
-      setIsDateSynced,
-      handleResetClick,
-      tableState,
-    }),
-    [
-      transactions,
-      setTransactions,
-      isDataSynced,
-      setIsDateSynced,
-      handleResetClick,
-      tableState,
-    ]
-  );
-
-  return (
-    <StatementContext.Provider value={context}>
-      {children}
-    </StatementContext.Provider>
-  );
-};
-
-const useStatementContext = () => {
-  const context = useContext(StatementContext);
-
-  if (!context) throw new Error('Something wrong wih your context');
-  const {
-    setTransactions,
-    transactions,
-    setIsDateSynced,
-    isDataSynced,
-    handleResetClick,
-    tableState,
-  } = context;
-
-  const [shouldUpdate, setShouldUpdate] = useState(false);
-  const mode = useRef<Mode>('get');
-
   const { statementName } = useParams();
 
-  const onGetStatement = useCallback((syncedData: Transaction[]) => {
+  const onGetStatement = useCallback((syncedData: Statement) => {
     if (!statementName) return;
     const dBData = db.readData(statementName);
     if (!dBData) {
@@ -95,28 +56,31 @@ const useStatementContext = () => {
     setIsDateSynced(isDateEqial);
   }, []);
 
-  const onForceUpdateStatement = useCallback((statement: Transaction[]) => {
+  const onForceUpdateStatement = useCallback((statement: Statement) => {
     if (!statementName) return;
     db.writeData(statement, statementName);
     setTransactions(statement);
     setIsDateSynced(true);
   }, []);
 
-  const onCompareHandler = useCallback((statement: Transaction[]) => {
+  const onCompareHandler = useCallback((statement: Statement) => {
     if (!statementName) return;
     const dBData = db.readData(statementName);
     setIsDateSynced(dBData ? compareStatements(statement, dBData) : false);
   }, []);
 
-  const actionMappimg: Record<Mode, (statement: Transaction[]) => void> = {
+  const actionMappimg: Record<Mode, (statement: Statement) => void> = {
     get: onGetStatement,
     compare: onCompareHandler,
     update: onForceUpdateStatement,
   };
 
+  const mode = useRef<Mode>('get');
+
   const [{ isLoading, error }, getStatementHandler] = useFetch(getStatement, {
     onSuccess: useCallback(
       (statement: Statement) => {
+        console.log('fff');
         const handler = actionMappimg[mode.current];
         handler(statement);
         mode.current = 'get';
@@ -124,6 +88,10 @@ const useStatementContext = () => {
       [mode]
     ),
   });
+
+  const handleResetClick = () => setTableState((state) => !state);
+
+  const [shouldUpdate, setShouldUpdate] = useState(false);
 
   const [, updateStatementHandler] = useFetch(updateStatement, {
     onSuccess: (data: string) => {
@@ -168,18 +136,50 @@ const useStatementContext = () => {
     getStatementHandler(statementName);
   };
 
-  return {
-    isLoading,
-    transactions,
-    error,
-    updateTransaction,
-    isDataSynced,
-    handleResetClick,
-    tableState,
-    handleSaveClick,
-    handleLoadClick,
-    handleCompareData,
-  };
+  const context = useMemo(
+    () => ({
+      transactions,
+      setTransactions,
+      isDataSynced,
+      setIsDateSynced,
+      handleResetClick,
+      tableState,
+      handleCompareData,
+      handleLoadClick,
+      handleSaveClick,
+      updateTransaction,
+      isLoading,
+      error,
+    }),
+    [
+      transactions,
+      setTransactions,
+      isDataSynced,
+      setIsDateSynced,
+      handleResetClick,
+      tableState,
+      handleCompareData,
+      handleLoadClick,
+      handleSaveClick,
+      updateTransaction,
+      isLoading,
+      error,
+    ]
+  );
+
+  return (
+    <StatementContext.Provider value={context}>
+      {children}
+    </StatementContext.Provider>
+  );
+};
+
+const useStatementContext = () => {
+  const context = useContext(StatementContext);
+
+  if (!context) throw new Error('Something wrong wih your context');
+
+  return context;
 };
 
 export { useStatementContext, StatementContextProvider };
