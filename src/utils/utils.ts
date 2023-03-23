@@ -16,6 +16,8 @@ export const propertyTypesMapping: Record<Column, PropertyType> = {
   transactionDate: 'date',
   memo: 'string',
   isClear: 'boolean',
+  rate: 'number',
+  convertedAmount: 'number'
 };
 
 const stringToDate = (value: string): string =>

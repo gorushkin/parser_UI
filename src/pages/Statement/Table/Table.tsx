@@ -1,7 +1,6 @@
-import { Transaction } from 'parser';
 import style from './Table.module.scss';
 import { useEffect, useState } from 'react';
-import { RowMode } from '../../../types';
+import { RowMode, Transaction } from '../../../types';
 import { columns } from '../../../utils/constants';
 import { cn, convertValue, propertyTypesMapping } from '../../../utils/utils';
 import { useStatementContext } from '../../../context/StatementContext';
@@ -41,9 +40,11 @@ const mapping: Record<
 const TableHeader = () => (
   <thead>
     <tr>
-      {columns.map(({ label }) => (
-        <th key={label}>{label}</th>
-      ))}
+      {columns
+        .filter((item) => item.isCaption)
+        .map(({ label }) => (
+          <th key={label}>{label}</th>
+        ))}
     </tr>
   </thead>
 );

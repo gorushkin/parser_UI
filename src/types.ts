@@ -6,10 +6,12 @@ export type Transaction = {
   transactionDate: string;
   processDate: string;
   amount: number;
+  rate: number;
   balance: number;
   memo: string;
   data: string;
   isClear: boolean;
+  convertedAmount: number;
 };
 
 export type Statement = Transaction[];
@@ -28,7 +30,16 @@ export type Column =
   | 'balance'
   | 'memo'
   | 'data'
-  | 'isClear';
+  | 'isClear'
+  | 'rate'
+  | 'convertedAmount';
+
+  export type Columns ={
+    label: string;
+    value: Column;
+    isVisible: boolean;
+    isCaption: boolean;
+  }[]
 
 export type TransactionGroup = Record<string, Statement>;
 
