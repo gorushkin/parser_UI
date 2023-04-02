@@ -29,7 +29,7 @@ export const useFetch: UseFetch = (
       const errorMessage =
         error instanceof Error ? error.message : 'Something went wrong';
       setError(errorMessage);
-      if (onFail) onFail();
+      if (onFail) onFail(error);
     } finally {
       setIsLoading(false);
     }
