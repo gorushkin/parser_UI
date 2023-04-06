@@ -12,6 +12,7 @@ export const FileForm = ({ onFormSave }: { onFormSave: () => void }) => {
 
   const [{ isLoading }, sendFileHandler] = useFetch(uploadFile, {
     onSuccess: onFormSave,
+    onFail: (error: string) => console.log(error),
   });
 
   const { fileInfo } = useExportContext();
