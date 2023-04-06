@@ -7,7 +7,7 @@ export const cn = (...classnames: ClassNames) =>
   classnames.filter((item) => !!item).join(' ');
 
 export const propertyTypesMapping: Record<Column, PropertyType> = {
-  amount: 'number',
+  amount: 'numberCur',
   balance: 'number',
   data: 'string',
   description: 'string',
@@ -17,7 +17,7 @@ export const propertyTypesMapping: Record<Column, PropertyType> = {
   memo: 'string',
   isClear: 'boolean',
   rate: 'number',
-  convertedAmount: 'number'
+  convertedAmount: 'number',
 };
 
 const stringToDate = (value: string): string =>
@@ -36,7 +36,11 @@ export const convertValue = (
   const mapping = {
     number: (value: string) => ({
       displayValue: numberToMoney(Number(value)),
-      copyValue: value.toString(),
+      copyValue: Math.abs(Number(value)).toString().replace('.', ','),
+    }),
+    numberCur: (value: string) => ({
+      displayValue: numberToMoney(Number(value)),
+      copyValue: Math.abs(Number(value)).toString().replace('.', ',') + ' TRY',
     }),
     string: (value = '') => ({
       displayValue: value,

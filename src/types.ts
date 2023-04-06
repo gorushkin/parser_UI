@@ -34,17 +34,22 @@ export type Column =
   | 'rate'
   | 'convertedAmount';
 
-  export type Columns ={
-    label: string;
-    value: Column;
-    isVisible: boolean;
-    isCaption: boolean;
-  }[]
+export type Columns = {
+  label: string;
+  value: Column;
+  isVisible: boolean;
+  isCaption: boolean;
+}[];
 
 export type TransactionGroup = Record<string, Statement>;
 
 export type Value = string | Date | number | boolean;
-export type PropertyType = 'number' | 'date' | 'string' | 'boolean';
+export type PropertyType =
+  | 'number'
+  | 'date'
+  | 'string'
+  | 'boolean'
+  | 'numberCur';
 export type RowMode = 'allColumns' | 'dataColumn';
 
 export type FileInfo = {
