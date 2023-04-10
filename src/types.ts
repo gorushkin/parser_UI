@@ -12,6 +12,7 @@ export type Transaction = {
   data: string;
   isClear: boolean;
   convertedAmount: number;
+  convertedBalance: number;
 };
 
 export type Summary = {
@@ -47,7 +48,8 @@ export type Column =
   | 'data'
   | 'isClear'
   | 'rate'
-  | 'convertedAmount';
+  | 'convertedAmount'
+  | 'convertedBalance'
 
 export type Columns = {
   label: string;

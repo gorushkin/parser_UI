@@ -4,14 +4,33 @@ import { useStatementContext } from '../context/StatementContext';
 import { Button } from '../components/Button/Button';
 import { Link } from 'react-router-dom';
 import { APP_ROUTES } from '../routes';
+import { useFetch } from '../hooks/useFetch';
+import { downloadStatement } from '../services/api';
+import { saveAs } from 'file-saver';
 
 export const Menu = () => {
-  const { isDataSynced, handleResetClick, handleSaveClick, handleLoadClick, handleCompareData } =
-    useStatementContext();
+  const {
+    isDataSynced,
+    handleResetClick,
+    handleSaveClick,
+    handleLoadClick,
+    handleCompareData,
+    statementName,
+  } = useStatementContext();
 
   const message = isDataSynced
     ? 'The data is synced'
     : 'The data is not synced';
+
+  const [, downloadStatementHandler] = useFetch(downloadStatement, {
+    onSuccess: (blob: Blob) => {
+      saveAs(blob, `${statementName}.csv`);
+    },
+  });
+
+  const handleExportClick = () => {
+    downloadStatementHandler(statementName);
+  };
 
   return (
     <div className={style.wrapper}>
@@ -39,15 +58,8 @@ export const Menu = () => {
           </Button>
         </div>
       </div>
-      <div className={style.row}>
-        {/* <div className={cn(style.buttonWrapper, style.buttonWrapperRight)}>
-          <Button onClick={onResetClick} color='blue'>
-            Load from disk
-          </Button>
-          <Button onClick={handleSaveClick} color='green'>
-            Save to disk
-          </Button>
-        </div> */}
+      <div className={cn(style.row, style.rowRight)}>
+        <Button onClick={handleExportClick}>Export Statement</Button>
       </div>
     </div>
   );

@@ -38,6 +38,12 @@ export const columns: Columns = [
     isCaption: true,
   },
   {
+    label: 'convertedBalance',
+    value: 'convertedBalance',
+    isVisible: true,
+    isCaption: true,
+  },
+  {
     label: 'Description',
     value: 'description',
     isVisible: true,

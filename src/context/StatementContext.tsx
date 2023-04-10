@@ -9,7 +9,10 @@ import {
   useRef,
 } from 'react';
 import { useFetch } from '../hooks/useFetch';
-import { getStatement, updateStatement } from '../services/api';
+import {
+  getStatement,
+  updateStatement,
+} from '../services/api';
 import { db } from '../utils/db';
 import { useParams } from 'react-router-dom';
 import { compareStatements } from '../utils/utils';
@@ -28,6 +31,7 @@ type Context = {
   handleSaveClick: () => void;
   handleLoadClick: () => void;
   handleCompareData: () => void;
+  statementName: string | undefined;
 };
 
 const StatementContext = createContext<Context | null>(null);
@@ -128,7 +132,7 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
   const updateTransaction = useCallback(
     (id: string, updatedTransaction: Transaction) => {
       setStatement((state) => ({
-        state,
+        ...state,
         transactions: state.transactions.map((item) =>
           item.id === id ? updatedTransaction : item
         ),
@@ -157,7 +161,7 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
   const context = useMemo(
     () => ({
       statement,
-      setTransactions: setStatement,
+      setStatement,
       isDataSynced,
       setIsDateSynced,
       handleResetClick,
@@ -168,6 +172,7 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
       updateTransaction,
       isLoading,
       error,
+      statementName,
     }),
     [
       statement,
@@ -182,6 +187,7 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
       updateTransaction,
       isLoading,
       error,
+      statementName,
     ]
   );
 
