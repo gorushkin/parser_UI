@@ -1,13 +1,70 @@
-import { Column } from '../types';
+import { Columns } from '../types';
 
-export const columns: { label: string; value: Column; isVisible: boolean }[] = [
-  { label: 'Transaction Date', value: 'transactionDate', isVisible: true },
-  { label: 'Process Date', value: 'processDate', isVisible: true },
-  { label: 'Amount', value: 'amount', isVisible: true },
-  { label: 'Balance', value: 'balance', isVisible: true },
-  { label: 'Description', value: 'description', isVisible: true },
-  { label: 'Payee', value: 'payeeName', isVisible: true },
-  { label: 'Memo', value: 'memo', isVisible: true },
-  { label: 'Show raw', value: 'data', isVisible: false },
-  { label: '*', value: 'isClear', isVisible: false },
+export const columns: Columns = [
+  {
+    label: 'Transaction Date',
+    value: 'transactionDate',
+    isVisible: true,
+    isCaption: true,
+  },
+  {
+    label: 'Process Date',
+    value: 'processDate',
+    isVisible: true,
+    isCaption: true,
+  },
+  {
+    label: 'Amount',
+    value: 'amount',
+    isVisible: true,
+    isCaption: true,
+  },
+  {
+    label: 'TYR',
+    value: 'convertedAmount',
+    isVisible: true,
+    isCaption: true,
+  },
+  {
+    label: 'Rate',
+    value: 'rate',
+    isVisible: true,
+    isCaption: true,
+  },
+  {
+    label: 'Balance',
+    value: 'balance',
+    isVisible: true,
+    isCaption: true,
+  },
+  {
+    label: 'Description',
+    value: 'description',
+    isVisible: true,
+    isCaption: true,
+  },
+  {
+    label: 'Payee',
+    value: 'payeeName',
+    isVisible: true,
+    isCaption: true,
+  },
+  {
+    label: 'Memo',
+    value: 'memo',
+    isVisible: true,
+    isCaption: true,
+  },
+  {
+    label: 'Show raw',
+    value: 'data',
+    isVisible: false,
+    isCaption: true,
+  },
+  {
+    label: '*',
+    value: 'isClear',
+    isVisible: false,
+    isCaption: true,
+  },
 ];

@@ -4,14 +4,15 @@ import { cn } from '../../../utils/utils';
 import styles from './FileForm.module.scss';
 import { useExportContext } from '../../../context/AppContext';
 import { useFetch } from '../../../hooks/useFetch';
-import { sendFile } from '../../../services/api';
+import { uploadFile } from '../../../services/api';
 
 export const FileForm = ({ onFormSave }: { onFormSave: () => void }) => {
   const [value, setValue] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
 
-  const [{ isLoading }, sendFileHandler] = useFetch(sendFile, {
+  const [{ isLoading }, sendFileHandler] = useFetch(uploadFile, {
     onSuccess: onFormSave,
+    onFail: (error: string) => console.log(error),
   });
 
   const { fileInfo } = useExportContext();

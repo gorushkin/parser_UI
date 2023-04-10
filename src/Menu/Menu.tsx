@@ -6,12 +6,12 @@ import { Link } from 'react-router-dom';
 import { APP_ROUTES } from '../routes';
 
 export const Menu = () => {
-  const { isDataSynced, handleResetClick, handleSaveClick, handleLoadClick } =
+  const { isDataSynced, handleResetClick, handleSaveClick, handleLoadClick, handleCompareData } =
     useStatementContext();
 
   const message = isDataSynced
-    ? 'The date is synced'
-    : 'The date is not synced';
+    ? 'The data is synced'
+    : 'The data is not synced';
 
   return (
     <div className={style.wrapper}>
@@ -30,6 +30,9 @@ export const Menu = () => {
         <div className={style.buttonWrapper}>
           <Button onClick={handleLoadClick} color="blue">
             Load from disk
+          </Button>
+          <Button onClick={handleCompareData} color="blue">
+            Check sync status
           </Button>
           <Button onClick={handleSaveClick} color="green">
             Save to disk

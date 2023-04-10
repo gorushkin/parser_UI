@@ -18,6 +18,12 @@
       transition: all 0.1s;
     }
   }
+
+  .row {
+    &Active {
+      background: rgb(205, 190, 190);
+    }
+  }
 }
 
 .checkbox {
