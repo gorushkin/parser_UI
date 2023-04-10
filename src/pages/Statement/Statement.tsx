@@ -6,6 +6,7 @@ import {
   StatementContextProvider,
   useStatementContext,
 } from '../../context/StatementContext';
+import { Summary } from './Summary/Summary';
 
 const Statement = () => {
   const { error, isLoading } = useStatementContext();
@@ -20,6 +21,9 @@ const Statement = () => {
         <>
           <div className={style.menuWrapper}>
             <Menu />
+          </div>
+          <div className={style.summary}>
+            <Summary/>
           </div>
           <Table />
         </>

@@ -14,7 +14,22 @@ export type Transaction = {
   convertedAmount: number;
 };
 
-export type Statement = Transaction[];
+export type Summary = {
+  income: number;
+  outcome: number;
+  startBalance: number;
+  endBalance: number;
+};
+
+export type GroupedSummary = {
+  defaultSummary: Summary;
+  convertedSummary: Summary;
+};
+
+export type Statement = {
+  transactions: Transaction[];
+  summary: GroupedSummary;
+};
 
 export type Payee = { id: string; name: string; displayName: string };
 export type Payees = Record<string, Payee>;

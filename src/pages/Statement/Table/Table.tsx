@@ -20,12 +20,18 @@ const AllColumns = ({ transaction }: { transaction: Transaction }) => {
     .map((column, i) => {
       const type = propertyTypesMapping[column.value];
       const value = transaction[column.value];
-      const { copyValue, displayValue } = convertValue(value, type);
-      return (
-        <td onClick={() => navigator.clipboard.writeText(copyValue)} key={i}>
-          {displayValue}
-        </td>
-      );
+      try {
+        const { copyValue, displayValue } = convertValue(value, type);
+        return (
+          <td onClick={() => navigator.clipboard.writeText(copyValue)} key={i}>
+            {displayValue}
+          </td>
+        );
+      } catch (error) {
+        console.log('type: ', type);
+        console.log(column);
+        return null;
+      }
     });
 };
 
@@ -49,7 +55,15 @@ const TableHeader = () => (
   </thead>
 );
 
-const TableRow = ({ transaction }: { transaction: Transaction }) => {
+const TableRow = ({
+  transaction,
+  onRowClick,
+  isActive,
+}: {
+  isActive: boolean;
+  transaction: Transaction;
+  onRowClick: Function;
+}) => {
   const { updateTransaction, tableState } = useStatementContext();
 
   const [rowMode, setRowMode] = useState<RowMode>('allColumns');
@@ -58,10 +72,18 @@ const TableRow = ({ transaction }: { transaction: Transaction }) => {
     setRowMode('allColumns');
   }, [tableState]);
 
-  const handleModeClick = () =>
-    setRowMode((mode) => (mode === 'allColumns' ? 'dataColumn' : 'allColumns'));
+  const handleModeClick = (
+    event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
 
-  const handleChange = () => {
+    setRowMode((mode) => (mode === 'allColumns' ? 'dataColumn' : 'allColumns'));
+  };
+
+  const handleChange = (
+    event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
     const updatedTransaction: Transaction = {
       ...transaction,
       isClear: !transaction.isClear,
@@ -69,8 +91,13 @@ const TableRow = ({ transaction }: { transaction: Transaction }) => {
     updateTransaction(transaction.id, updatedTransaction);
   };
 
+  const hadleSelectClick = () => onRowClick();
+
   return (
-    <tr>
+    <tr
+      className={cn(style.row, isActive && style.rowActive)}
+      onClick={hadleSelectClick}
+    >
       {mapping[rowMode]({ transaction })}
       <td onClick={handleModeClick}>Show</td>
       <td
@@ -85,12 +112,22 @@ const TableRow = ({ transaction }: { transaction: Transaction }) => {
 };
 
 const TableBody = () => {
-  const { transactions } = useStatementContext();
+  const { statement } = useStatementContext();
+  const [activeRow, setActiveRow] = useState<number | null>(null);
+
+  const handleRowClick = (i: number) => {
+    setActiveRow(i);
+  };
 
   return (
     <tbody>
-      {transactions.map((transaction, i) => (
-        <TableRow key={i} transaction={transaction} />
+      {statement.transactions.map((transaction, i) => (
+        <TableRow
+          onRowClick={() => handleRowClick(i)}
+          isActive={i === activeRow}
+          key={transaction.id}
+          transaction={transaction}
+        />
       ))}
     </tbody>
   );

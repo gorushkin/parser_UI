@@ -16,9 +16,9 @@ import { compareStatements } from '../utils/utils';
 import { Statement, Transaction } from '../types';
 
 type Context = {
-  transactions: Statement;
+  statement: Statement;
   isDataSynced: boolean;
-  setTransactions: React.Dispatch<React.SetStateAction<Statement>>;
+  setStatement: React.Dispatch<React.SetStateAction<Statement>>;
   setIsDateSynced: React.Dispatch<React.SetStateAction<boolean>>;
   handleResetClick: () => void;
   tableState: boolean;
@@ -35,7 +35,23 @@ const StatementContext = createContext<Context | null>(null);
 type Mode = 'get' | 'compare' | 'update';
 
 const StatementContextProvider = ({ children }: { children: ReactElement }) => {
-  const [transactions, setTransactions] = useState<Statement>([]);
+  const [statement, setStatement] = useState<Statement>({
+    transactions: [],
+    summary: {
+      convertedSummary: {
+        endBalance: 0,
+        startBalance: 0,
+        income: 0,
+        outcome: 0,
+      },
+      defaultSummary: {
+        endBalance: 0,
+        startBalance: 0,
+        income: 0,
+        outcome: 0,
+      },
+    },
+  });
   const [isDataSynced, setIsDateSynced] = useState<boolean>(false);
   const [tableState, setTableState] = useState<boolean>(false);
 
@@ -46,20 +62,20 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
     const dBData = db.readData(statementName);
     if (!dBData) {
       db.writeData(syncedData, statementName);
-      setTransactions(syncedData);
+      setStatement(syncedData);
       setIsDateSynced(true);
       return;
     }
     const isDateEqial = compareStatements(syncedData, dBData);
     setIsDateSynced(isDateEqial);
-    setTransactions(dBData);
+    setStatement(dBData);
     setIsDateSynced(isDateEqial);
   }, []);
 
   const onForceUpdateStatement = useCallback((statement: Statement) => {
     if (!statementName) return;
     db.writeData(statement, statementName);
-    setTransactions(statement);
+    setStatement(statement);
     setIsDateSynced(true);
   }, []);
 
@@ -80,7 +96,6 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
   const [{ isLoading, error }, getStatementHandler] = useFetch(getStatement, {
     onSuccess: useCallback(
       (statement: Statement) => {
-        console.log('fff');
         const handler = actionMappimg[mode.current];
         handler(statement);
         mode.current = 'get';
@@ -102,9 +117,9 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
 
   useEffect(() => {
     if (!statementName || !shouldUpdate) return;
-    db.writeData(transactions, statementName);
+    db.writeData(statement, statementName);
     setShouldUpdate(false);
-  }, [transactions, shouldUpdate]);
+  }, [statement, shouldUpdate]);
 
   useEffect(() => {
     getStatementHandler(statementName);
@@ -112,9 +127,12 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
 
   const updateTransaction = useCallback(
     (id: string, updatedTransaction: Transaction) => {
-      setTransactions((state) =>
-        state.map((item) => (item.id === id ? updatedTransaction : item))
-      );
+      setStatement((state) => ({
+        state,
+        transactions: state.transactions.map((item) =>
+          item.id === id ? updatedTransaction : item
+        ),
+      }));
       setIsDateSynced(false);
       setShouldUpdate(true);
     },
@@ -123,7 +141,7 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
 
   const handleSaveClick = () => {
     mode.current = 'get';
-    updateStatementHandler({ name: statementName, statement: transactions });
+    updateStatementHandler({ name: statementName, statement: statement });
   };
 
   const handleLoadClick = () => {
@@ -138,8 +156,8 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
 
   const context = useMemo(
     () => ({
-      transactions,
-      setTransactions,
+      statement,
+      setTransactions: setStatement,
       isDataSynced,
       setIsDateSynced,
       handleResetClick,
@@ -152,8 +170,8 @@ const StatementContextProvider = ({ children }: { children: ReactElement }) => {
       error,
     }),
     [
-      transactions,
-      setTransactions,
+      statement,
+      setStatement,
       isDataSynced,
       setIsDateSynced,
       handleResetClick,
